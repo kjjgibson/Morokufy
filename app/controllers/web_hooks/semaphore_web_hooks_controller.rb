@@ -6,12 +6,13 @@ module WebHooks
       name = params[:author_name]
 
       if Player.find_by_email(email)
-        #TODO: Get player from GS
+        # @gs_player = GameServer::Player.get(email)
       else
         Player.create!(name: name, email: email)
-        #TODO: Create player on GS
+        # @gs_player = GameServer::Player.create(email)
       end
 
+      #return the points
       render json: :head
     end
 
