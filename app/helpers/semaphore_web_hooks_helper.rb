@@ -1,0 +1,2 @@
+module SemaphoreWebHooksHelper
+end

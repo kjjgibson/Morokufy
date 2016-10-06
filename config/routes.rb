@@ -1,3 +1,7 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
+  namespace :web_hooks do
+    resources :semaphore_web_hooks, only: %i(create index)
+  end
+
 end
