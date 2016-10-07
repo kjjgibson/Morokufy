@@ -1,26 +1,24 @@
 module GameServer
   class RestRequest
 
-    attr_reader :url
-
-    def initialize
-      #TODO: get url from ENV variable
-    end
-
-    def get(path, id)
+    def self.get(path, id)
 
     end
 
-    def post(path, body)
+    def self.post(path, body)
+      return HTTParty.post(request_url_for_path(path), body: body.to_json, headers: GameServer::AuthenticationHelper.admin_gs_headers(body, request_path, 'POST'))
+    end
+
+    def self.put(path, id, body)
 
     end
 
-    def put(path, id, body)
+    def self.delete(path, id)
 
     end
 
-    def delete(path, id)
-
+    private def request_url_for_path(path)
+      return URI.join("http://#{Rails.application.config.gameserver.url}", Rails.application.config.gameserver.tenant, path)
     end
 
   end

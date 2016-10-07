@@ -30,6 +30,19 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'draper'
+
+# Use rabl to generate JSON based APIs from any ruby object
+# replaces the default jbuilder gem
+# Also add either `oj` or `yajl-ruby` as the JSON parser
+# https://github.com/nesquena/rabl
+gem 'rabl'
+gem 'oj'
+
+# used instead of net::http ruby lib
+# Httparty supports the use of nested hashes within request body params
+gem 'httparty', '~> 0.13.7'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
@@ -52,7 +65,10 @@ group :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
   gem 'faker'
-
+  # Mock requests to the external GameServer api
+  # https://github.com/bblimke/webmock
+  gem 'webmock'
+  gem 'timecop'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
