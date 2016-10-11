@@ -39,4 +39,10 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  config.gameserver = ActiveSupport::OrderedOptions.new
+  config.gameserver.admin_api_token = '0123456789'
+  config.gameserver.admin_shared_secret = 'abcdefg'
+  config.gameserver.url = 'gameserver-morokufy.herokuapp.com/'
+  config.gameserver.tenant = 'morokufy'
 end

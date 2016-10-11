@@ -30,8 +30,6 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'draper'
-
 # Use rabl to generate JSON based APIs from any ruby object
 # replaces the default jbuilder gem
 # Also add either `oj` or `yajl-ruby` as the JSON parser
