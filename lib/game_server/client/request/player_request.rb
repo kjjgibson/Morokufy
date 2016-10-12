@@ -2,6 +2,8 @@ require 'game_server/client/request/client_request'
 require 'game_server/client/response/get_player_response'
 require 'game_server/model/player'
 
+# This class is used to perform requests to the Client Players Game Server API
+
 module GameServer
   module Client
     module Request
@@ -9,6 +11,12 @@ module GameServer
 
         RESOURCE_PATH = '/players'
 
+        # Get a Player from the Game Server
+        #
+        # === Parameters
+        # * +nickname+ - The nickname of the Game Server Player
+        #
+        # @returns A GetPlayerResponse object containing the Game Server Player
         def get_player(nickname)
           response = get(RESOURCE_PATH, nickname)
           response_body = JSON.parse(response.body, symbolize_names: true)

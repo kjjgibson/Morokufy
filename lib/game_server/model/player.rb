@@ -1,3 +1,6 @@
+# A representation of the Game Server Player and all of it's attributes
+# This class is constructed by deserializing the response from a Client::Request::PlayerRequest.get_player request
+
 module GameServer
   module Model
     class Player
