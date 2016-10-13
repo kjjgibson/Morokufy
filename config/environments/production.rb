@@ -83,4 +83,10 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  config.gameserver = ActiveSupport::OrderedOptions.new
+  config.gameserver.admin_api_token = ENV['GAME_SERVER_ADMIN_API_KEY']
+  config.gameserver.admin_shared_secret = ENV['GAME_SERVER_ADMIN_SHARED_SECRET']
+  config.gameserver.url = ENV['GAME_SERVER_URL']
+  config.gameserver.tenant = ENV['GAME_SERVER_TENANT']
 end

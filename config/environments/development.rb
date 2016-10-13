@@ -51,4 +51,10 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  config.gameserver = ActiveSupport::OrderedOptions.new
+  config.gameserver.admin_api_token = ENV['GAME_SERVER_ADMIN_API_KEY'] || '0123456789'
+  config.gameserver.admin_shared_secret = ENV['GAME_SERVER_ADMIN_SHARED_SECRET'] || 'abcdefg'
+  config.gameserver.url = ENV['GAME_SERVER_URL'] || 'gameserver-morokufy.herokuapp.com'
+  config.gameserver.tenant = ENV['GAME_SERVER_TENANT'] || 'morokufy'
 end
