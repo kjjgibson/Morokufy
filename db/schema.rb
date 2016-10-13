@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161012065455) do
+ActiveRecord::Schema.define(version: 20161013065140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,16 @@ ActiveRecord::Schema.define(version: 20161012065455) do
     t.datetime "updated_at",    null: false
     t.string   "api_key"
     t.string   "shared_secret"
+  end
+
+  create_table "rule_consequent_events", force: :cascade do |t|
+    t.string   "consequent_type"
+    t.integer  "achievement_id"
+    t.string   "point_type"
+    t.integer  "point_count"
+    t.string   "event_name"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
 end
