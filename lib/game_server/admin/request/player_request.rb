@@ -1,6 +1,8 @@
 require 'game_server/admin/request/admin_request'
 require 'game_server/admin/response/create_player_response'
 
+# This class is used to perform requests to the Admin Players Game Server API
+
 module GameServer
   module Admin
     module Request
@@ -8,6 +10,12 @@ module GameServer
 
         PATH = '/players'
 
+        # Create a Player on the Game Server
+        #
+        # === Parameters
+        # * +nickname+ - The nickname that will be used to identify the Game Server Player
+        #
+        # @returns A CreatePlayerResponse object containing the Game Server response
         def create_player(nickname)
           body = { nickname: nickname, ext_id: nickname }
           response = post(PATH, body)
