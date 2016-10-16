@@ -71,8 +71,8 @@ class MorokufyHipChatNotifications
     card.description = description
     card.icon = HipChat::Icon.new(url: 'http://moroku.com/wp-content/uploads/2015/12/weblogo150-50-copy.png')
     card.activity = HipChat::CardActivity.new(html: activity_html)
-    card.attributes = [HipChat::CardAttribute.new(label: 'Points', value: HipChat::CardAttributeValue.new(label: gs_player.points)),
-                       HipChat::CardAttribute.new(label: 'Achievements', value: HipChat::CardAttributeValue.new(label: gs_player.achievements.count))]
+    card.attributes = [HipChat::CardAttribute.new(label: 'Points', value: HipChat::CardAttributeValue.new(label: "#{gs_player.points}")),
+                       HipChat::CardAttribute.new(label: 'Achievements', value: HipChat::CardAttributeValue.new(label: "#{gs_player.achievements.count}"))]
     return card
   end
 
