@@ -7,7 +7,7 @@ describe WebHooks::SemaphoreWebHooksController, type: :controller do
     let(:name) { 'Bob' }
     let(:email) { 'bob@bob.com' }
     let(:result) { 'passed' }
-    let(:request_body) { { author_name: name, author_email: email, result: result } }
+    let(:request_body) { { commit: { author_name: name, author_email: email }, result: result } }
 
     before do
       allow(controller).to receive(:create_player_if_does_not_exist).and_return(nil)

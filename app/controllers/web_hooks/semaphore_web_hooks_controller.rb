@@ -5,8 +5,8 @@ module WebHooks
   class SemaphoreWebHooksController < ApplicationController
 
     def create
-      email = params[:author_email]
-      name = params[:author_name]
+      email = params[:commit][:author_email]
+      name = params[:commit][:author_name]
 
       create_player_if_does_not_exist(name, email)
 
