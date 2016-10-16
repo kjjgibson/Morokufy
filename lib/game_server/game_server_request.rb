@@ -30,7 +30,7 @@ module GameServer
       request_url = request_url_for_path(path)
 
       Rails.logger.info("Url: #{request_url}, body: #{body.to_json}, headers: #{headers}")
-      return HTTParty.post(request_url, body: body.to_json, headers: headers.merge({ 'Content-Type': 'application/json' }))
+      return HTTParty.post(request_url, body: body.to_json, headers: headers)
     end
 
     #TODO: PUT and DELETE
