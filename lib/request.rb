@@ -11,7 +11,7 @@
     #
     # @return HTTParty response object
     def post(url, body, headers: nil)
-      puts "Url: #{url}, body: #{body.to_json}, headers: #{headers}"
+      Rails.logger.info("Url: #{url}, body: #{body.to_json}, headers: #{headers}")
       return HTTParty.post(url, body: body.to_json, headers: headers.merge({ 'Content-Type': 'application/json' }))
     end
 

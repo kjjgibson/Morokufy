@@ -28,6 +28,8 @@ module GameServer
     # @return HTTParty response object
     def post(path, body, headers: nil)
       request_url = request_url_for_path(path)
+
+      Rails.logger.info("Url: #{request_url}, body: #{body.to_json}, headers: #{headers}")
       return HTTParty.post(request_url, body: body.to_json, headers: headers.merge({ 'Content-Type': 'application/json' }))
     end
 
