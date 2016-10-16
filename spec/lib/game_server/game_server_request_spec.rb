@@ -5,15 +5,15 @@ describe 'GameServerRequest' do
 
   let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy#{resource_path}" }
   let(:resource_path) { '/giraffes' }
-  let(:headers) { { 'Authorization': '123 : abc' } }
+  let(:headers) { { Date: '20161016 07:21:17 UTC', 'Content-MD5': 'xyz', 'Authorization': '123 : abc' } }
   let(:expected_headers) { headers.merge({ 'Content-Type': 'application/json' }) }
 
   describe '#post' do
 
-    let(:body) { { awesome_param: 'cool' } }
+    let(:body) { { nickname: 'nickname', ext_id: 'ext_id' } }
 
     it 'should call the post method on HTTParty' do
-      expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: body.to_json, headers: expected_headers })
+      expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: body.to_json, headers: expected_headers.stringify_keys })
 
       GameServer::GameServerRequest.new().post(resource_path, body, headers: headers)
     end
