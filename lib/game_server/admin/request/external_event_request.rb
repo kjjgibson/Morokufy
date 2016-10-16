@@ -22,8 +22,8 @@ module GameServer
           response_body = JSON.parse(response.body, symbolize_names: true)
 
           if response.success?
-            points_awards = points_awards(response_body[:points_awarded])
-            achievement_awards = achievement_awards(response_body[:achievements_awarded])
+            points_awards = points_awards(response_body[:rule_results][:points_awarded])
+            achievement_awards = achievement_awards(response_body[:rule_results][:achievements_awarded])
 
             external_event_response = GameServer::Admin::Response::ExternalEventResponse.new(true, nil, points_awards, achievement_awards)
           else
