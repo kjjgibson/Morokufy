@@ -3,9 +3,10 @@ require 'game_server/admin/request/admin_request'
 
 describe 'AdminRequest' do
 
-  let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy#{resource_path}" }
+  let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy/admin#{resource_path}" }
   let(:resource_path) { '/giraffes' }
   let(:mock_headers) { { 'Authorization': '123 : abc' } }
+  let(:expected_headers) { mock_headers.merge({ 'Content-Type': 'application/json' }) }
 
   describe '#post' do
     let(:body) { { awesome_param: 'cool' } }
@@ -15,7 +16,7 @@ describe 'AdminRequest' do
     end
 
     it 'should call the post method on HTTParty' do
-      expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: body.to_json, headers: mock_headers })
+      expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: body.to_json, headers: expected_headers.stringify_keys })
 
       GameServer::Admin::Request::AdminRequest.new().post(resource_path, body)
     end

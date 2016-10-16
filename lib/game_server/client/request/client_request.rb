@@ -34,6 +34,7 @@ module GameServer
         #
         # @return HTTParty response object
         def get(path, id)
+          path = "#{API_PATH}#{path}"
           return super(path, id, headers: client_headers("#{path}/#{id}", {}, 'GET'))
         end
 
@@ -46,6 +47,7 @@ module GameServer
         #
         # @return HTTParty response object
         def post(path, body)
+          path = "#{API_PATH}#{path}"
           return super(path, body, headers: client_headers(path, body, 'POST'))
         end
 

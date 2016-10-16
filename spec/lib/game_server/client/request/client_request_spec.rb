@@ -3,9 +3,10 @@ require 'game_server/client/request/client_request'
 
 describe 'ClientRequest' do
 
-  let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy#{resource_path}" }
+  let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy/client#{resource_path}" }
   let(:resource_path) { '/giraffes' }
   let(:mock_headers) { { 'Authorization': '123 : abc' } }
+  let(:expected_headers) { mock_headers.merge({ 'Content-Type': 'application/json' }) }
   let(:api_key) { '123' }
   let(:shared_secret) { 'abc' }
 
@@ -17,7 +18,7 @@ describe 'ClientRequest' do
     end
 
     it 'should call the post method on HTTParty' do
-      expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: body.to_json, headers: mock_headers })
+      expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: body.to_json, headers: expected_headers.stringify_keys })
 
       GameServer::Client::Request::ClientRequest.new(api_key, shared_secret).post(resource_path, body)
     end

@@ -18,7 +18,7 @@ describe 'Request' do
     end
 
     it 'should perform the request' do
-      request_stub = stub_request(:post, request_path).with(body: body.to_json, headers: expected_headers)
+      request_stub = stub_request(:post, request_path).with(body: body.to_json, headers: expected_headers.stringify_keys)
 
       Request.new().post(request_path, body, headers: headers)
 
