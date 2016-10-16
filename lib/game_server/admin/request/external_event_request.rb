@@ -41,7 +41,7 @@ module GameServer
         # * +points_awarded_hash+ - Hash in the form: { <point_type>: <number_of_points> }
         private def points_awards(points_awarded_hash)
           points_awards_array = []
-          points_awarded_hash.each do |key, value|
+          (points_awarded_hash || []).each do |key, value|
             points_awards_array << GameServer::Model::PointsAward.new(key, value)
           end
           return points_awards_array
@@ -54,7 +54,7 @@ module GameServer
         # * +achievements_awarded_hash+ - Array in the form: [{ achievement_id: <id>, created_at: <datetime> }, ...]
         private def achievement_awards(achievements_awarded_hash)
           achievement_awards_array = []
-          achievements_awarded_hash.each do |achievement_award|
+          (achievements_awarded_hash || []).each do |achievement_award|
             achievement_awards_array << GameServer::Model::AchievementAward.new(achievement_award[:achievement_id])
           end
           return achievement_awards_array
