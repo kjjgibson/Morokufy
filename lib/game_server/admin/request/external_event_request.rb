@@ -20,7 +20,7 @@ module GameServer
           response = post("#{PATH}/log_event", body)
           response_body = JSON.parse(response.body, symbolize_names: true)
 
-          if response.is_success?
+          if response.success?
             points_awards = points_awards(response_body[:points_awarded])
             achievement_awards = achievement_awards(response_body[:achievements_awarded])
 

@@ -24,7 +24,7 @@ describe 'PlayerRequest' do
 
       before do
         allow(response_double).to receive(:body).and_return(response_body)
-        allow(response_double).to receive(:is_success?).and_return(true)
+        allow(response_double).to receive(:success?).and_return(true)
 
         allow(HTTParty).to receive(:get).and_return(response_double)
       end
@@ -56,7 +56,7 @@ describe 'PlayerRequest' do
 
       before do
         allow(response_double).to receive(:body).and_return(response_body)
-        allow(response_double).to receive(:is_success?).and_return(false)
+        allow(response_double).to receive(:success?).and_return(false)
 
         allow(HTTParty).to receive(:get).and_return(response_double)
       end

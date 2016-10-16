@@ -21,7 +21,7 @@ module GameServer
           response = get(RESOURCE_PATH, nickname)
           response_body = JSON.parse(response.body, symbolize_names: true)
 
-          if response.is_success?
+          if response.success?
             #TODO: deserialize response json into Player object automatically
             nickname = response_body[:nickname]
             ext_id = response_body[:ext_id]
