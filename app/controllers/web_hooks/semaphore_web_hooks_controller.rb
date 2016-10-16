@@ -1,4 +1,5 @@
 require 'game_server/admin/request/external_event_request'
+require 'morokufy_hip_chat_notifications'
 
 module WebHooks
   class SemaphoreWebHooksController < ApplicationController

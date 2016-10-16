@@ -41,6 +41,7 @@ class ApplicationController < ActionController::Base
 
     if response.is_success?
       create_rule_consequent_events(response, event_name)
+      send_hip_chat_messages(event_name, player_ext_id)
     else
       Rails.logger.error("Could not log event on the GameServer: #{response.error_message}")
     end
@@ -67,6 +68,21 @@ class ApplicationController < ActionController::Base
           consequent_type: RuleConsequentEvent::ConsequentType::ACHIEVEMENT_CONSEQUENT,
           event_name: event_name,
           achievement_id: achievement_awarded.achievement_id)
+    end
+  end
+
+  # Send HipChat notifications if points have been awarded
+  #
+  # === Parameters
+  #
+  # * +event_name+ - The event that caused the points and achievements to be awarded
+  # * +player_ext_id+ - The Player's identifier used when sending the HipChat message
+  private def send_hip_chat_messages(event_name, player_ext_id)
+    notifications = MorokufyHipChatNotifications.new()
+    gs_player = GameServer::Model::Player.new('', '', '', '') #TODO: dummy player for now until we get it for real
+
+    (external_event_response.points_awarded || []).each do |points_award|
+      notifications.send_points_awarded_notification(points_award.count, player_ext_id, gs_player, event_name)
     end
   end
 

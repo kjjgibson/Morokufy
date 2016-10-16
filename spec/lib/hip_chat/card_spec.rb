@@ -26,6 +26,7 @@ describe 'Card' do
     end
 
     it 'should validate the format value' do
+      expect(FactoryGirl.build(:card, format: nil)).to be_valid
       expect(FactoryGirl.build(:card, format: HipChat::Card::Format::COMPACT)).to be_valid
       expect(FactoryGirl.build(:card, format: HipChat::Card::Format::MEDIUM)).to be_valid
       expect(FactoryGirl.build(:card, format: 'giraffe')).to be_invalid

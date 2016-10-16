@@ -27,7 +27,7 @@ module HipChat
 
     validates_presence_of :label
 
-    def initialize(label)
+    def initialize(label: nil)
       @label = label
     end
 

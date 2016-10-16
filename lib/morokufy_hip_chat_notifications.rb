@@ -5,6 +5,7 @@ require 'hip_chat/icon'
 require 'hip_chat/card_attribute'
 require 'hip_chat/card_attribute_value'
 require 'hip_chat/card_activity'
+require 'hip_chat/room'
 
 class MorokufyHipChatNotifications
 
@@ -36,8 +37,10 @@ class MorokufyHipChatNotifications
   #
   # * +room_notification+ - The notification object to serialize to JSON and send to the HipChat v2 API
   private def send_hip_chat_notification(room_notification)
-            #TODO: get from ENV vars
-    HipChat::HipChatRequest.new().send_room_notification('https://moroku.hipchat.com', '3034776', '1MAhSghpwx0A1ag0wlD08lcmKTJhsMbWYI4kRpNU', room_notification)
+    room = HipChat::Room.new(room_id: Rails.application.config.hip_chat.room_id,
+                             room_auth_token: Rails.application.config.hip_chat.room_auth_token)
+
+    HipChat::HipChatRequest.new(url: Rails.application.config.hip_chat.api_url).send_room_notification(room, room_notification)
   end
 
   # Build a Room Notification with a message that alerts users
@@ -46,7 +49,7 @@ class MorokufyHipChatNotifications
   #
   # * +message+ - The message to display on clients that don't support rendering cards
   private def build_room_notification(message)
-    room_notification = HipChat::RoomNotification.new(message)
+    room_notification = HipChat::RoomNotification.new(message: message)
     room_notification.color = HipChat::RoomNotification::Color::GRAY
     room_notification.notify = true
     return room_notification
@@ -62,14 +65,15 @@ class MorokufyHipChatNotifications
   # * +description+ - Description to display when expanding the card
   # * +gs_player+ - The Game Server Player used to get the points and achievements
   private def build_card(activity_html, description, gs_player)
-    card = HipChat::Card.new(SecureRandom.uuid, HipChat::Card::Style::APPLICATION)
+    card = HipChat::Card.new(id: SecureRandom.uuid, style: HipChat::Card::Style::APPLICATION)
     card.format = HipChat::Card::Format::MEDIUM
     card.title = 'Morokufy'
     card.description = description
-    card.icon = HipChat::Icon.new('http://moroku.com/wp-content/uploads/2015/12/weblogo150-50-copy.png')
-    card.activity = HipChat::CardActivity.new(activity_html)
-    card.attributes = [HipChat::CardAttribute.new('Points', HipChat::CardAttributeValue.new(gs_player.points)),
-                       HipChat::CardAttribute.new('Achievements', HipChat::CardAttributeValue.new(gs_player.achievements.count))]
+    card.icon = HipChat::Icon.new(url: 'http://moroku.com/wp-content/uploads/2015/12/weblogo150-50-copy.png')
+    card.activity = HipChat::CardActivity.new(html: activity_html)
+    card.attributes = [HipChat::CardAttribute.new(label: 'Points', value: HipChat::CardAttributeValue.new(label: gs_player.points)),
+                       HipChat::CardAttribute.new(label: 'Achievements', value: HipChat::CardAttributeValue.new(label: gs_player.achievements.count))]
+    return card
   end
 
   # Get a descriptive string for the EventType

@@ -12,7 +12,7 @@ module HipChat
 
     validates_presence_of :value
 
-    def initialize(label, value)
+    def initialize(label: nil, value: nil)
       @label = label
       @value = value
     end

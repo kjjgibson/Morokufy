@@ -49,9 +49,9 @@ module HipChat
     validates_presence_of :style
     validates_presence_of :id
     validates_inclusion_of :style, in: lambda { |_| Style.constants.map { |c| Style.const_get(c) } }
-    validates_inclusion_of :format, in: lambda { |_| Format.constants.map { |c| Format.const_get(c) } }
+    validates_inclusion_of :format, in: lambda { |_| Format.constants.map { |c| Format.const_get(c) } }, allow_nil: true
 
-    def initialize(id, style)
+    def initialize(id: nil, style: nil)
       @id = id
       @style = style
     end

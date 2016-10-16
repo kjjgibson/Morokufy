@@ -13,6 +13,7 @@ describe 'RoomNotification' do
     end
 
     it 'should validate the color' do
+      expect(FactoryGirl.build(:room_notification, color: nil)).to be_valid
       expect(FactoryGirl.build(:room_notification, color: HipChat::RoomNotification::Color::YELLOW)).to be_valid
       expect(FactoryGirl.build(:room_notification, color: HipChat::RoomNotification::Color::GREEN)).to be_valid
       expect(FactoryGirl.build(:room_notification, color: HipChat::RoomNotification::Color::RED)).to be_valid
@@ -23,6 +24,7 @@ describe 'RoomNotification' do
     end
 
     it 'should validate the message_format' do
+      expect(FactoryGirl.build(:room_notification, message_format: nil)).to be_valid
       expect(FactoryGirl.build(:room_notification, message_format: HipChat::RoomNotification::MessageFormat::HTML)).to be_valid
       expect(FactoryGirl.build(:room_notification, message_format: HipChat::RoomNotification::MessageFormat::TEXT)).to be_valid
       expect(FactoryGirl.build(:room_notification, message_format: 'klingon')).to be_invalid
@@ -30,6 +32,7 @@ describe 'RoomNotification' do
 
     it 'should validate the from length' do
       expect(FactoryGirl.build(:room_notification, from: '')).to be_valid
+      expect(FactoryGirl.build(:room_notification, from: nil)).to be_valid
       expect(FactoryGirl.build(:room_notification, from: 'a' * 64)).to be_valid
       expect(FactoryGirl.build(:room_notification, from: 'a' * 65)).to be_invalid
     end

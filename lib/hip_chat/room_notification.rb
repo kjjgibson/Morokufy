@@ -43,12 +43,12 @@ module HipChat
     # An optional card object
     attr_accessor :card
 
-    validates :from, length: { minimum: 0, maximum: 64}
+    validates :from, length: { minimum: 0, maximum: 64}, allow_nil: true
     validates_presence_of :message
-    validates_inclusion_of :color, in: lambda { |_| Color.constants.map { |c| Color.const_get(c) } }
-    validates_inclusion_of :message_format, in: lambda { |_| MessageFormat.constants.map { |c| MessageFormat.const_get(c) } }
+    validates_inclusion_of :color, in: lambda { |_| Color.constants.map { |c| Color.const_get(c) } }, allow_nil: true
+    validates_inclusion_of :message_format, in: lambda { |_| MessageFormat.constants.map { |c| MessageFormat.const_get(c) } }, allow_nil: true
 
-    def initialize(message)
+    def initialize(message: nil)
       @message = message
     end
 

@@ -6,19 +6,20 @@ describe 'GameServerRequest' do
   let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy#{resource_path}" }
   let(:resource_path) { '/giraffes' }
   let(:headers) { { 'Authorization': '123 : abc' } }
+  let(:expected_headers) { headers.merge({ 'Content-Type': 'application/json' }) }
 
   describe '#post' do
 
     let(:body) { { awesome_param: 'cool' } }
 
     it 'should call the post method on HTTParty' do
-      expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: body.to_json, headers: headers })
+      expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: body.to_json, headers: expected_headers })
 
       GameServer::GameServerRequest.new().post(resource_path, body, headers: headers)
     end
 
     it 'should perform the request' do
-      request_stub = stub_request(:post, request_path).with(body: body.to_json, headers: headers)
+      request_stub = stub_request(:post, request_path).with(body: body.to_json, headers: expected_headers)
 
       GameServer::GameServerRequest.new().post(resource_path, body, headers: headers)
 

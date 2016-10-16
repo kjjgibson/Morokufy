@@ -12,7 +12,7 @@ module HipChat
 
     validates_presence_of :url
 
-    def initialize(url)
+    def initialize(url: nil)
       @url = url
     end
 

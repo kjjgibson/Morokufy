@@ -12,7 +12,7 @@ module HipChat
 
     validates_presence_of :html
 
-    def initialize(html)
+    def initialize(html: nil)
       @html = html
     end
 
