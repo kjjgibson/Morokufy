@@ -17,7 +17,7 @@ module GameServer
 
         def log_event(player_ext_id, external_event_name)
           body = { player_ext_id: player_ext_id, external_event_id: external_event_name }
-          response = post("#{PATH}/log_event", body)
+          response = post("#{PATH}/log_event", body, headers: { 'API-VERSION': 'v2' })
           response_body = JSON.parse(response.body, symbolize_names: true)
 
           if response.success?

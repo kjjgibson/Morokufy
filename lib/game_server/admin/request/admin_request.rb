@@ -33,9 +33,9 @@ module GameServer
         # * +body+ - A hash representing the body of the request - will be converted to JSON
         #
         # @return HTTParty response object
-        def post(path, body)
+        def post(path, body, headers: {})
           path = "#{API_PATH}#{path}"
-          return super(path, body, headers: admin_headers(path, body, 'POST'))
+          return super(path, body, headers: admin_headers(path, body, 'POST').merge(headers))
         end
 
         # Construct the authentication headers required by the Game Server
