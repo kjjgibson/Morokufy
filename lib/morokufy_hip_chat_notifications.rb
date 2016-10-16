@@ -51,7 +51,7 @@ class MorokufyHipChatNotifications
   private def build_room_notification(message)
     room_notification = HipChat::RoomNotification.new(message: message)
     room_notification.color = HipChat::RoomNotification::Color::GRAY
-    room_notification.notify = true
+    room_notification.notify = false
     return room_notification
   end
 

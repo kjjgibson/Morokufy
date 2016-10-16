@@ -18,7 +18,7 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         expect(room_notification.color).to eq('gray')
         expect(room_notification.message).to eq('<b>Bob</b> has been awarded <b>10</b> points')
-        expect(room_notification.notify).to eq(true)
+        expect(room_notification.notify).to eq(false)
 
         card = room_notification.card
         expect(card).not_to eq(nil)
