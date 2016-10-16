@@ -1,3 +1,8 @@
+require 'game_server/admin/request/player_request'
+require 'game_server/admin/request/external_event_request'
+require 'morokufy_hip_chat_notifications'
+require 'game_server/model/player'
+
 class ApplicationController < ActionController::Base
 
   # If the Player does not exist on Morokufy, first attempt to create them on the Game Server and then if successful, here on Morokufy
