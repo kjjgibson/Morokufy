@@ -18,6 +18,7 @@ module GameServer
         def log_event(player_ext_id, external_event_name)
           body = { player: player_ext_id, external_event_id: external_event_name }
           response = post("#{PATH}/log_event", body, headers: { 'API-VERSION': 'v2' })
+          Rails.logger.info("GS Response: #{response.body}")
           response_body = JSON.parse(response.body, symbolize_names: true)
 
           if response.success?
