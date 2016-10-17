@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
     if player
       # The Player already exists in Morokufy and therefore should also exist on GameServer so we don't need to do anything
     else
-      response = GameServer::Admin::Request::PlayerRequest.new().create_player(name)
+      response = GameServer::Admin::Request::PlayerRequest.new().create_player(name.downcase.gsub(/\s+/, ''))
       if response.is_success?
         # Only create the Morokufy Player if we successfully created the Player on the Game Server
         player = Player.create!(name: name, email: email, api_key: response.api_key, shared_secret: response.shared_secret)
@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
   def get_game_server_player(morokufy_player)
     player = nil
 
-    response = GameServer::Client::Request::PlayerRequest.new(morokufy_player.api_key, morokufy_player.shared_secret).get_player(morokufy_player.name)
+    response = GameServer::Client::Request::PlayerRequest.new(morokufy_player.api_key, morokufy_player.shared_secret).get_player(morokufy_player.name.downcase.gsub(/\s+/, ''))
     if response.is_success?
       player = response.player
     else
