@@ -35,7 +35,7 @@ module GameServer
         # @return HTTParty response object
         def get(path, id, headers: {})
           path = "#{API_PATH}#{path}"
-          return super(path, id, headers: headers.merge(client_headers("#{path}/#{id}", "", 'GET')))
+          return super(path, id, headers: headers.merge(client_headers("#{path}/#{id}", {}, 'GET')))
         end
 
         # Perform a POST request

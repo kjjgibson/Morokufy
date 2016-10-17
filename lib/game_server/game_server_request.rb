@@ -38,7 +38,13 @@ module GameServer
     # Returns the absolute request URL by concatenating the path with the URL and tenant from the config variables
     protected def request_url_for_path(path, resource_id: nil)
       url_string = "#{Rails.application.config.gameserver.url}/#{Rails.application.config.gameserver.tenant}/#{path}".squeeze('/') # Remove double slashes
-      url_string = "#{url_string}/#{resource_id}" if resource_id
+      if resource_id
+        if resource_id.is_a?(String)
+          resource_id = URI.encode(resource_id)
+        end
+        url_string = "#{url_string}/#{resource_id}"
+      end
+
       return URI.parse("http://#{url_string}")
     end
 

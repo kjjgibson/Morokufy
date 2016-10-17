@@ -32,7 +32,7 @@ describe 'AdminRequest' do
     end
 
     it 'should call the get method on HTTParty' do
-      expect(HTTParty).to receive(:get).with(URI.parse(resource_request_path), { headers: mock_headers })
+      expect(HTTParty).to receive(:get).with(URI.parse(resource_request_path), { headers: mock_headers.stringify_keys })
 
       GameServer::Admin::Request::AdminRequest.new().get(resource_path, resource_id)
     end

@@ -34,7 +34,7 @@ describe 'ClientRequest' do
     end
 
     it 'should call the get method on HTTParty' do
-      expect(HTTParty).to receive(:get).with(URI.parse(resource_request_path), { headers: mock_headers })
+      expect(HTTParty).to receive(:get).with(URI.parse(resource_request_path), { headers: mock_headers.stringify_keys })
 
       GameServer::Client::Request::ClientRequest.new(api_key, shared_secret).get(resource_path, resource_id)
     end
