@@ -38,8 +38,8 @@ describe 'GameServerRequest' do
 
   describe '#get' do
 
-    let(:resource_id) { 10 }
-    let(:resource_request_path) { "#{request_path}/#{resource_id}" }
+    let(:resource_id) { 'bob@gmail.com' }
+    let(:resource_request_path) { "#{request_path}/bob%40gmail%2Ecom" }
 
     it 'should call the get method on HTTParty' do
       expect(HTTParty).to receive(:get).with(URI.parse(resource_request_path), { headers: headers.stringify_keys })

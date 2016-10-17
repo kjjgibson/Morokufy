@@ -36,11 +36,7 @@ module GameServer
         def get(path, id, headers: {})
           path = "#{API_PATH}#{path}"
 
-          if id.is_a?(String)
-            id = URI.encode(id, /\W/)
-          end
-
-          return super(path, id, headers: headers.merge(client_headers("#{path}/#{id}", "", 'GET')))
+          return super(path, id, headers: headers.merge(client_headers(path, "", 'GET', resource_id: id)))
         end
 
         # Perform a POST request
@@ -65,8 +61,8 @@ module GameServer
         # * +method+ - The REST method. E.g. POST, GET, etc.
         #
         # @return Hash of headers
-        private def client_headers(path, body, method)
-          url = request_url_for_path(path)
+        private def client_headers(path, body, method, resource_id: nil)
+          url = request_url_for_path(path, resource_id: resource_id)
           return GameServer::AuthenticationHelper.gs_headers(body, api_key, shared_secret, url, method)
         end
 

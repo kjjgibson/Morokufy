@@ -10,7 +10,7 @@ describe 'PlayerRequest' do
   let(:api_key) { '123' }
   let(:shared_secret) { 'abc' }
   let(:nickname) { 'Bob' }
-  let(:request_body) { {}.to_json }
+  let(:request_body) { "" }
 
   describe '#get_player' do
 

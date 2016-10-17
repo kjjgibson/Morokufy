@@ -25,12 +25,12 @@ describe 'ClientRequest' do
   end
 
   describe '#get' do
-    let(:body) { { } }
+    let(:body) { "" }
     let(:resource_id) { 10 }
     let(:resource_request_path) { "#{request_path}/#{resource_id}" }
 
     before do
-      expect(GameServer::AuthenticationHelper).to receive(:gs_headers).with(body.to_json, api_key, shared_secret, URI.parse(resource_request_path), 'GET').and_return(mock_headers)
+      expect(GameServer::AuthenticationHelper).to receive(:gs_headers).with(body, api_key, shared_secret, URI.parse(resource_request_path), 'GET').and_return(mock_headers)
     end
 
     it 'should call the get method on HTTParty' do
