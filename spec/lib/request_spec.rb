@@ -12,7 +12,7 @@ describe 'Request' do
     let(:body) { { awesome_param: 'cool' } }
 
     it 'should call the post method on HTTParty' do
-      expect(HTTParty).to receive(:post).with(request_path, { body: body.to_json, headers: expected_headers })
+      expect(HTTParty).to receive(:post).with(request_path, { body: body.to_json, headers: expected_headers.stringify_keys })
 
       Request.new().post(request_path, body, headers: headers)
     end

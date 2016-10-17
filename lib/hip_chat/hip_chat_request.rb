@@ -25,9 +25,7 @@ module HipChat
       body_hash = JSON.parse(room_notification.to_json)
 
       if room_notification.valid?
-        r = post("#{@url}/v2/room/#{room.room_id}/notification", body_hash, headers: { 'Authorization': "Bearer #{room.room_auth_token}" })
-        puts "body: #{r.body}"
-        puts "Result: #{r.success?}"
+        post("#{@url}/v2/room/#{room.room_id}/notification", body_hash, headers: { 'Authorization': "Bearer #{room.room_auth_token}" })
 
         notification_sent = true
       else

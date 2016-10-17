@@ -3,10 +3,10 @@ require 'game_server/admin/request/player_request'
 
 describe 'PlayerRequest' do
 
-  let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy#{resource_path}" }
+  let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy/admin#{resource_path}" }
   let(:resource_path) { '/players' }
   let(:mock_headers) { { 'Authorization': '123 : abc' } }
-
+  let(:expected_headers) { mock_headers.merge({ 'Content-Type': 'application/json' }) }
   let(:nickname) { 'Bob' }
   let(:request_body) { { nickname: nickname, ext_id: nickname }.to_json }
 
@@ -29,7 +29,7 @@ describe 'PlayerRequest' do
       end
 
       it 'should call the post method on HTTParty' do
-        expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: request_body, headers: mock_headers })
+        expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: request_body, headers: expected_headers.stringify_keys })
 
         GameServer::Admin::Request::PlayerRequest.new().create_player(nickname)
       end

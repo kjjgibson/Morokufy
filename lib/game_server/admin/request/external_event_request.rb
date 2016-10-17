@@ -1,7 +1,7 @@
 require 'game_server/admin/request/admin_request'
 require 'game_server/admin/response/external_event_response'
-require 'game_server/model/points_award'
-require 'game_server/model/achievement_award'
+require 'game_server/model/rule_result_points_award'
+require 'game_server/model/rule_result_achievement_award'
 
 module GameServer
   module Admin
@@ -43,7 +43,7 @@ module GameServer
         private def points_awards(points_awarded_hash)
           points_awards_array = []
           (points_awarded_hash || []).each do |key, value|
-            points_awards_array << GameServer::Model::PointsAward.new(key, value)
+            points_awards_array << GameServer::Model::RuleResultPointsAward.new(key, value)
           end
           return points_awards_array
         end
@@ -56,7 +56,7 @@ module GameServer
         private def achievement_awards(achievements_awarded_hash)
           achievement_awards_array = []
           (achievements_awarded_hash || []).each do |achievement_award|
-            achievement_awards_array << GameServer::Model::AchievementAward.new(achievement_award[:achievement_id])
+            achievement_awards_array << GameServer::Model::RuleResultAchievementAward.new(achievement_award[:achievement_id])
           end
           return achievement_awards_array
         end

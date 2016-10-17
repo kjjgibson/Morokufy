@@ -11,7 +11,7 @@ FactoryGirl.define do
     description 'description'
     association :thumbnail, factory: :card_thumbnail
     association :activity, factory: :card_activity
-    attributes { FactoryGirl.build(:card_attribute) }
+    attributes { [FactoryGirl.build(:card_attribute)] }
     id 'id'
     icon
   end

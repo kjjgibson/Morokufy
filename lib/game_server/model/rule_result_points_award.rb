@@ -3,7 +3,7 @@
 
 module GameServer
   module Model
-    class PointsAward
+    class RuleResultPointsAward
 
       attr_accessor :point_type, :count
 

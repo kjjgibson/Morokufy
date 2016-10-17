@@ -3,7 +3,7 @@
 
 module GameServer
   module Model
-    class AchievementAward
+    class RuleResultAchievementAward
 
       attr_accessor :achievement_id
 

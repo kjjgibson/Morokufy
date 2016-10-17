@@ -13,5 +13,7 @@ FactoryGirl.define do
   factory :player do
     name { Faker::Name.name }
     email { Faker::Internet.email }
+    api_key 'api_key'
+    shared_secret 'shared_secret'
   end
 end

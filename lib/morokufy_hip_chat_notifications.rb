@@ -6,6 +6,7 @@ require 'hip_chat/card_attribute'
 require 'hip_chat/card_attribute_value'
 require 'hip_chat/card_activity'
 require 'hip_chat/room'
+require 'hip_chat/card_description'
 
 class MorokufyHipChatNotifications
 
@@ -18,11 +19,18 @@ class MorokufyHipChatNotifications
   # === Parameters
   #
   # * +points_awarded+ - The number of points that were awarded
+  # * +point_type+ - The type of points that were awarded
   # * +player_name+ - The name to display in the message
   # * +gs_player+ - The GameServer Player used to get the number of total points and achievements
   # * +event+ - The event that triggered the points to be awarded - used to construct the reason message
-  def send_points_awarded_notification(points_awarded, player_name, gs_player, event)
-    title = "<b>#{player_name}</b> has been awarded <b>#{points_awarded}</b> points"
+  def send_points_awarded_notification(points_awarded, point_type, player_name, gs_player, event)
+    if points_awarded > 0
+      verb_string = 'has been awarded'
+    else
+      verb_string = 'has lost'
+    end
+
+    title = "<b>#{player_name}</b> #{verb_string} <b>#{points_awarded}</b> #{point_type}"
     reason = reason_for_event(event)
 
     room_notification = build_room_notification(title)
@@ -68,12 +76,24 @@ class MorokufyHipChatNotifications
     card = HipChat::Card.new(id: SecureRandom.uuid, style: HipChat::Card::Style::APPLICATION)
     card.format = HipChat::Card::Format::MEDIUM
     card.title = 'Morokufy'
-    card.description = description
+    card.description = HipChat::CardDescription.new(value: description, format: HipChat::CardDescription::ValueFormat::HTML)
     card.icon = HipChat::Icon.new(url: 'http://moroku.com/wp-content/uploads/2015/12/weblogo150-50-copy.png')
     card.activity = HipChat::CardActivity.new(html: activity_html)
-    card.attributes = [HipChat::CardAttribute.new(label: 'Points', value: HipChat::CardAttributeValue.new(label: "#{gs_player.points}")),
-                       HipChat::CardAttribute.new(label: 'Achievements', value: HipChat::CardAttributeValue.new(label: "#{gs_player.achievements.count}"))]
+    card.attributes = attributes_for_point_types(gs_player).concat([HipChat::CardAttribute.new(label: 'Achievements', value: HipChat::CardAttributeValue.new(label: "#{gs_player.achievement_awards.count}"))])
     return card
+  end
+
+  # Builds a CardAttribute for each PlayerPointType that the Game Server Player has
+  #
+  # === Parameters
+  #
+  # * +gs_player+ - The Player to get the PointTypes from
+  private def attributes_for_point_types(gs_player)
+    attributes = []
+      gs_player.player_point_types.each do |player_point_type|
+        attributes << HipChat::CardAttribute.new(label: player_point_type.point_name, value: HipChat::CardAttributeValue.new(label: "#{player_point_type.count}"))
+      end
+    return attributes
   end
 
   # Get a descriptive string for the EventType

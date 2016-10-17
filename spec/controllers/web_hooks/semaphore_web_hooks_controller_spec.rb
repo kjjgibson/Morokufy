@@ -12,6 +12,7 @@ describe WebHooks::SemaphoreWebHooksController, type: :controller do
     before do
       allow(controller).to receive(:create_player_if_does_not_exist).and_return(nil)
       allow(controller).to receive(:log_event).and_return(nil)
+      allow(controller).to receive(:get_game_server_player).and_return(nil)
     end
 
     it 'should attempt to create the player if it does not exist' do
@@ -20,21 +21,69 @@ describe WebHooks::SemaphoreWebHooksController, type: :controller do
       post :create, params: request_body
     end
 
-    context 'passed build' do
-      let(:result) { 'passed' }
+    context 'successful player create' do
+      let(:mf_player) { FactoryGirl.build(:player) }
 
-      it 'should log the event' do
-        expect(controller).to receive(:log_event).with(email, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT).and_return(nil)
+      before do
+        allow(controller).to receive(:create_player_if_does_not_exist).and_return(mf_player)
+      end
+
+      it 'should get the gs player from the server' do
+        expect(controller).to receive(:get_game_server_player).with(mf_player)
 
         post :create, params: request_body
       end
+
+      context 'successful get gs player' do
+        let(:gs_player) { GameServer::Model::Player.new('', '', '', '')}
+
+        before do
+          allow(controller).to receive(:get_game_server_player).and_return(gs_player)
+        end
+
+        context 'passed build' do
+          let(:result) { 'passed' }
+
+          it 'should log the event' do
+            expect(controller).to receive(:log_event).with(email, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT, gs_player).and_return(nil)
+
+            post :create, params: request_body
+          end
+        end
+
+        context 'failed build' do
+          let(:result) { 'failed' }
+
+          it 'should log the event' do
+            expect(controller).to receive(:log_event).with(email, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_FAILED_EVENT, gs_player).and_return(nil)
+
+            post :create, params: request_body
+          end
+        end
+      end
+
+      context 'unsuccessful get gs player' do
+        before do
+          allow(controller).to receive(:get_game_server_player).and_return(nil)
+        end
+
+        it 'should not log any events' do
+          expect(controller).not_to receive(:log_event)
+
+          post :create, params: request_body
+        end
+      end
     end
 
-    context 'failed build' do
-      let(:result) { 'failed' }
+    context 'unsuccessful player create' do
+      it 'should not get the gs player' do
+        expect(controller).not_to receive(:get_game_server_player)
 
-      it 'should log the event' do
-        expect(controller).to receive(:log_event).with(email, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_FAILED_EVENT).and_return(nil)
+        post :create, params: request_body
+      end
+
+      it 'should not log the event' do
+        expect(controller).not_to receive(:log_event)
 
         post :create, params: request_body
       end

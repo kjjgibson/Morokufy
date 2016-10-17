@@ -5,15 +5,15 @@ module GameServer
   module Model
     class Player
 
-      attr_accessor :nickname, :ext_id, :avatar, :theme, :points, :achievements
+      attr_accessor :nickname, :ext_id, :avatar, :theme, :player_point_types, :achievement_awards
 
       def initialize(nickname, ext_id, avatar, theme)
         @nickname = nickname
         @ext_id = ext_id
         @avatar = avatar
         @theme = theme
-        @points = 0
-        @achievements = []
+        @player_point_types = []
+        @achievement_awards = []
       end
 
     end

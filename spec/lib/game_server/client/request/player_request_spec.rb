@@ -3,13 +3,13 @@ require 'game_server/client/request/player_request'
 
 describe 'PlayerRequest' do
 
-  let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy#{resource_path}/#{nickname}" }
+  let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy/client#{resource_path}/#{nickname}" }
   let(:resource_path) { '/players' }
   let(:mock_headers) { { 'Authorization': '123 : abc' } }
   let(:api_key) { '123' }
   let(:shared_secret) { 'abc' }
   let(:nickname) { 'Bob' }
-  let(:request_body) { { }.to_json }
+  let(:request_body) { {}.to_json }
 
   describe '#get_player' do
 
@@ -20,7 +20,7 @@ describe 'PlayerRequest' do
     context 'successful request' do
 
       let(:response_double) { double('response') }
-      let(:response_body) { { nickname: 'nickname', ext_id: 'ext_id', avatar: 'avatar', theme: 'theme' }.to_json }
+      let(:response_body) { { nickname: 'nickname', ext_id: 'ext_id', avatar: 'avatar', theme: 'theme', point_types: [{ name: 'Points', amount: 100 }, { name: 'Coins', amount: 10 }] }.to_json }
 
       before do
         allow(response_double).to receive(:body).and_return(response_body)
@@ -47,6 +47,13 @@ describe 'PlayerRequest' do
         expect(player.ext_id).to eq('ext_id')
         expect(player.avatar).to eq('avatar')
         expect(player.theme).to eq('theme')
+
+        player_point_types = player.player_point_types
+        expect(player_point_types.count).to eq(2)
+        expect(player_point_types[0].point_name).to eq('Points')
+        expect(player_point_types[0].count).to eq(100)
+        expect(player_point_types[1].point_name).to eq('Coins')
+        expect(player_point_types[1].count).to eq(10)
       end
     end
 
