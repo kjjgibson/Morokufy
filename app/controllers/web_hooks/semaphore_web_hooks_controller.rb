@@ -19,7 +19,7 @@ module WebHooks
             event_name = GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_FAILED_EVENT
           end
 
-          log_event(email, event_name, game_server_player)
+          log_event(name.downcase.gsub(/\s+/, ''), event_name, game_server_player)
         else
           Rails.logger.error('Could not get the Game Server Player - not logging the event either')
         end
