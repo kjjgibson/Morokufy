@@ -35,6 +35,11 @@ module GameServer
         # @return HTTParty response object
         def get(path, id, headers: {})
           path = "#{API_PATH}#{path}"
+
+          if id.is_a?(String)
+            id = URI.encode(id, /\W/)
+          end
+
           return super(path, id, headers: headers.merge(client_headers("#{path}/#{id}", "", 'GET')))
         end
 
