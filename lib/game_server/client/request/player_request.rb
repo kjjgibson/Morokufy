@@ -19,7 +19,7 @@ module GameServer
         #
         # @returns A GetPlayerResponse object containing the Game Server Player
         def get_player(nickname)
-          response = get(RESOURCE_PATH, nickname)
+          response = get(RESOURCE_PATH, nickname, headers: { 'API-VERSION': 'V2' })
           response_body = JSON.parse(response.body, symbolize_names: true)
 
           if response.success?

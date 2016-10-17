@@ -42,7 +42,7 @@ describe 'GameServerRequest' do
     let(:resource_request_path) { "#{request_path}/#{resource_id}" }
 
     it 'should call the get method on HTTParty' do
-      expect(HTTParty).to receive(:get).with(URI.parse(resource_request_path), { headers: headers })
+      expect(HTTParty).to receive(:get).with(URI.parse(resource_request_path), { headers: headers.stringify_keys })
 
       GameServer::GameServerRequest.new().get(resource_path, resource_id, headers: headers)
     end

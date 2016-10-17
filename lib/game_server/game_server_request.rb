@@ -15,7 +15,7 @@ module GameServer
     # @return HTTParty response object
     def get(path, id, headers: nil)
       request_url = request_url_for_path(path, resource_id: id)
-      return HTTParty.get(request_url, headers: headers)
+      return HTTParty.get(request_url, headers: headers.stringify_keys)
     end
 
     # Perform a POST request

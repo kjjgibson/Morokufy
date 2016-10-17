@@ -33,9 +33,9 @@ module GameServer
         # * +id+ - The id of the resource to get. E.g 10 or name%20of%20thing - will be suffixed to the end of the URL
         #
         # @return HTTParty response object
-        def get(path, id)
+        def get(path, id, headers: {})
           path = "#{API_PATH}#{path}"
-          return super(path, id, headers: client_headers("#{path}/#{id}", {}, 'GET'))
+          return super(path, id, headers: headers.merge(client_headers("#{path}/#{id}", {}, 'GET')))
         end
 
         # Perform a POST request
