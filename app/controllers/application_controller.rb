@@ -2,6 +2,7 @@ require 'game_server/admin/request/player_request'
 require 'game_server/admin/request/external_event_request'
 require 'morokufy_hip_chat_notifications'
 require 'game_server/model/player'
+require 'game_server/client/request/player_request'
 
 class ApplicationController < ActionController::Base
 
