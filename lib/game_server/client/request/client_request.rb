@@ -67,7 +67,7 @@ module GameServer
         end
 
         protected def request_path(path, resource_id: nil)
-          url_string = "#{Rails.application.config.gameserver.tenant}/#{path}".squeeze('/') # Remove double slashes
+          url_string = "/#{Rails.application.config.gameserver.tenant}/#{path}".squeeze('/') # Remove double slashes
           if resource_id
             if resource_id.is_a?(String)
               resource_id = URI.encode(resource_id, /\W/)
