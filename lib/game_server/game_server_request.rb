@@ -40,7 +40,7 @@ module GameServer
       url_string = "#{Rails.application.config.gameserver.url}/#{Rails.application.config.gameserver.tenant}/#{path}".squeeze('/') # Remove double slashes
       if resource_id
         if resource_id.is_a?(String)
-          resource_id = URI.encode(resource_id)
+          resource_id = URI.encode(resource_id, /\W/)
         end
         url_string = "#{url_string}/#{resource_id}"
       end
