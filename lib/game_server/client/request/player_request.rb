@@ -22,6 +22,8 @@ module GameServer
           response = get(RESOURCE_PATH, nickname, headers: { 'API-VERSION': 'V2' })
           response_body = JSON.parse(response.body, symbolize_names: true)
 
+          Rails.logger.info("GS Get Player Response: #{response_body}")
+
           if response.success?
             #TODO: deserialize response json into Player object automatically
             nickname = response_body[:nickname]
@@ -30,7 +32,7 @@ module GameServer
             theme = response_body[:theme]
             player_point_types = []
             point_types_response = response_body[:point_types]
-            point_types_response.each do |point_type_response|
+            (point_types_response || []).each do |point_type_response|
               player_point_types << GameServer::Model::PlayerPointType.new(point_name: point_type_response[:name], count: point_type_response[:amount])
             end
 
