@@ -62,8 +62,20 @@ module GameServer
         #
         # @return Hash of headers
         private def client_headers(path, body, method, resource_id: nil)
-          url = request_url_for_path(path, resource_id: resource_id)
+          url = request_path(path, resource_id: resource_id)
           return GameServer::AuthenticationHelper.gs_headers(body, api_key, shared_secret, url, method)
+        end
+
+        protected def request_path(path, resource_id: nil)
+          url_string = "#{Rails.application.config.gameserver.tenant}/#{path}".squeeze('/') # Remove double slashes
+          if resource_id
+            if resource_id.is_a?(String)
+              resource_id = URI.encode(resource_id, /\W/)
+            end
+            url_string = "#{url_string}/#{resource_id}"
+          end
+
+          return URI.parse(url_string)
         end
 
       end
