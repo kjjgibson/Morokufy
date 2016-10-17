@@ -48,7 +48,7 @@ module GameServer
         # @return HTTParty response object
         def post(path, body)
           path = "#{API_PATH}#{path}"
-          return super(path, body, headers: client_headers(path, body, 'POST'))
+          return super(path, body, headers: client_headers(path, body.to_json, 'POST'))
         end
 
         # Construct the authentication headers required by the Game Server
@@ -62,7 +62,7 @@ module GameServer
         # @return Hash of headers
         private def client_headers(path, body, method)
           url = request_url_for_path(path)
-          return GameServer::AuthenticationHelper.gs_headers(body.to_json, api_key, shared_secret, url, method)
+          return GameServer::AuthenticationHelper.gs_headers(body, api_key, shared_secret, url, method)
         end
 
       end
