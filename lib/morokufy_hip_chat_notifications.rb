@@ -99,9 +99,16 @@ class MorokufyHipChatNotifications
 
       # If we were just awarded some points, update teh GS Player's total count for that point type
       total_point_count = player_point_type.count
+      Rails.logger.info("beginning total_point_count: #{total_point_count}")
+      Rails.logger.info("player_point_type.point_name: #{player_point_type.point_name}, point_type_awarded: #{point_type_awarded}, points_awarded: #{points_awarded}")
+      Rails.logger.info("player_point_type.point_name.class: #{player_point_type.point_name.class}")
+      Rails.logger.info("point_type_awarded.class: #{point_type_awarded.class}")
+      Rails.logger.info("player_point_type.point_name == point_type_awarded: #{player_point_type.point_name == point_type_awarded}")
       if player_point_type.point_name == point_type_awarded
+        Rails.logger.info("adding newly awarded points")
         total_point_count = total_point_count + points_awarded
       end
+      Rails.logger.info("final total_point_count: #{total_point_count}")
 
       attributes << HipChat::CardAttribute.new(label: player_point_type.point_name, value: HipChat::CardAttributeValue.new(label: "#{total_point_count}"))
     end
