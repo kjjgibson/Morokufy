@@ -43,7 +43,7 @@ module GameServer
         private def points_awards(points_awarded_hash)
           points_awards_array = []
           (points_awarded_hash || []).each do |key, value|
-            points_awards_array << GameServer::Model::RuleResultPointsAward.new(key, value)
+            points_awards_array << GameServer::Model::RuleResultPointsAward.new(key.to_s, value)
           end
           return points_awards_array
         end

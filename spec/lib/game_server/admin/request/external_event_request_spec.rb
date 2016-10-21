@@ -40,9 +40,9 @@ describe 'ExternalEventRequest' do
 
         points_awarded = create_event_response.points_awarded
         expect(points_awarded.count).to eq(2)
-        expect(points_awarded[0].point_type).to eq(:points)
+        expect(points_awarded[0].point_type).to eq('points')
         expect(points_awarded[0].count).to eq(10)
-        expect(points_awarded[1].point_type).to eq(:coins)
+        expect(points_awarded[1].point_type).to eq('coins')
         expect(points_awarded[1].count).to eq(2)
 
         achievements_awarded = create_event_response.achievements_awarded
