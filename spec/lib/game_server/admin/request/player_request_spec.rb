@@ -13,7 +13,7 @@ describe 'PlayerRequest' do
   describe '#create_player' do
 
     before do
-      allow(GameServer::AuthenticationHelper).to receive(:admin_gs_headers).with(request_body, URI.parse(request_path), 'POST').and_return(mock_headers)
+      allow(GameServer::AuthenticationHelper).to receive(:admin_gs_headers).with(request_body, URI.parse('/morokufy/admin/players'), 'POST').and_return(mock_headers)
     end
 
     context 'successful request' do
@@ -29,7 +29,7 @@ describe 'PlayerRequest' do
       end
 
       it 'should call the post method on HTTParty' do
-        expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: request_body, headers: expected_headers.stringify_keys })
+        expect(HTTParty).to receive(:post).with(URI.parse('http://gameserver-morokufy.herokuapp.com/morokufy/admin/players'), { body: request_body, headers: expected_headers.stringify_keys })
 
         GameServer::Admin::Request::PlayerRequest.new().create_player(nickname)
       end

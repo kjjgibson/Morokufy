@@ -3,8 +3,6 @@ require 'game_server/admin/request/external_event_request'
 
 describe 'ExternalEventRequest' do
 
-  let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy/admin#{resource_path}" }
-  let(:resource_path) { '/external_events/log_event' }
   let(:mock_headers) { { 'Authorization': '123 : abc' } }
   let(:expected_headers) { mock_headers.merge({'API-VERSION': 'v2', 'Content-Type': 'application/json'})}
   let(:player_ext_id) { 123 }
@@ -13,7 +11,7 @@ describe 'ExternalEventRequest' do
 
   describe '#log_event' do
     before do
-      allow(GameServer::AuthenticationHelper).to receive(:admin_gs_headers).with(request_body, URI.parse(request_path), 'POST').and_return(mock_headers)
+      allow(GameServer::AuthenticationHelper).to receive(:admin_gs_headers).with(request_body, URI.parse('/morokufy/admin/external_events/log_event'), 'POST').and_return(mock_headers)
     end
 
     context 'successful request' do
@@ -29,7 +27,7 @@ describe 'ExternalEventRequest' do
       end
 
       it 'should call the post method on HTTParty' do
-        expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: request_body, headers: expected_headers.deep_stringify_keys })
+        expect(HTTParty).to receive(:post).with(URI.parse('http://gameserver-morokufy.herokuapp.com/morokufy/admin/external_events/log_event'), { body: request_body, headers: expected_headers.deep_stringify_keys })
 
         GameServer::Admin::Request::ExternalEventRequest.new().log_event(player_ext_id, external_event_id)
       end

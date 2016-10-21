@@ -22,7 +22,7 @@ module GameServer
         # @return HTTParty response object
         def get(path, id)
           path = "#{API_PATH}#{path}"
-          return super(path, id, headers: admin_headers(path, {}, 'GET'))
+          return super(path, id, headers: admin_headers(path, {}, 'GET', resource_id: id))
         end
 
         # Perform a POST request
@@ -47,8 +47,21 @@ module GameServer
         # * +method+ - The REST method. E.g. POST, GET, etc.
         #
         # @return Hash of headers
-        private def admin_headers(path, body, method)
-          return GameServer::AuthenticationHelper.admin_gs_headers(body.to_json, request_url_for_path(path), method)
+        private def admin_headers(path, body, method, resource_id: nil)
+          path = request_path(path, resource_id: resource_id)
+          return GameServer::AuthenticationHelper.admin_gs_headers(body.to_json, path, method)
+        end
+
+        protected def request_path(path, resource_id: nil)
+          url_string = "/#{Rails.application.config.gameserver.tenant}/#{path}".squeeze('/') # Remove double slashes
+          if resource_id
+            if resource_id.is_a?(String)
+              resource_id = URI.encode(resource_id, /\W/)
+            end
+            url_string = "#{url_string}/#{resource_id}"
+          end
+
+          return URI.parse(url_string)
         end
 
       end

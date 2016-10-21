@@ -62,8 +62,8 @@ module GameServer
         #
         # @return Hash of headers
         private def client_headers(path, body, method, resource_id: nil)
-          url = request_path(path, resource_id: resource_id)
-          return GameServer::AuthenticationHelper.gs_headers(body, api_key, shared_secret, url, method)
+          path = request_path(path, resource_id: resource_id)
+          return GameServer::AuthenticationHelper.gs_headers(body, api_key, shared_secret, path, method)
         end
 
         protected def request_path(path, resource_id: nil)

@@ -20,17 +20,18 @@ class MorokufyHipChatNotifications
   #
   # * +points_awarded+ - The number of points that were awarded
   # * +point_type+ - The type of points that were awarded
-  # * +player_name+ - The name to display in the message
+  # * +player+ - Morokufy Player - used to get the name to display in the message
   # * +gs_player+ - The GameServer Player used to get the number of total points and achievements
   # * +event+ - The event that triggered the points to be awarded - used to construct the reason message
-  def send_points_awarded_notification(points_awarded, point_type, player_name, gs_player, event)
+  def send_points_awarded_notification(points_awarded, point_type, player, gs_player, event)
     if points_awarded > 0
       verb_string = 'has been awarded'
     else
       verb_string = 'has lost'
     end
 
-    title = "<b>#{player_name}</b> #{verb_string} <b>#{points_awarded}</b> #{point_type}"
+    player_alias = get_most_sensible_alias_value(player)
+    title = "<b>#{player_alias}</b> #{verb_string} <b>#{points_awarded}</b> #{point_type}"
     reason = reason_for_event(event)
 
     room_notification = build_room_notification(title)
@@ -90,9 +91,9 @@ class MorokufyHipChatNotifications
   # * +gs_player+ - The Player to get the PointTypes from
   private def attributes_for_point_types(gs_player)
     attributes = []
-      gs_player.player_point_types.each do |player_point_type|
-        attributes << HipChat::CardAttribute.new(label: player_point_type.point_name, value: HipChat::CardAttributeValue.new(label: "#{player_point_type.count}"))
-      end
+    gs_player.player_point_types.each do |player_point_type|
+      attributes << HipChat::CardAttribute.new(label: player_point_type.point_name, value: HipChat::CardAttributeValue.new(label: "#{player_point_type.count}"))
+    end
     return attributes
   end
 
@@ -112,6 +113,31 @@ class MorokufyHipChatNotifications
     end
 
     return reason
+  end
+
+  # Return the most sensible Alias value that belongs to a Player in order to be used in the Hip Chat message
+  # We prefer to use a name, then an email, then a username
+  # If the player has no known aliases then we'll default to 'Unknown Player'
+  #
+  # === Parameters
+  # * +player+ - The Player that has many aliases
+  #
+  # @returns the Alias's alias_value
+  private def get_most_sensible_alias_value(player)
+    alias_value = 'Unknown Player'
+
+    aliases = player.aliases
+    alias_types = aliases.pluck(:alias_type)
+    alias_type_preferences = [Alias::AliasType::NAME, Alias::AliasType::EMAIL, Alias::AliasType::USERNAME]
+
+    alias_type_preferences.each do |alias_type|
+      if alias_types.include?(alias_type)
+        alias_value = aliases.where(alias_type: alias_type).first.alias_value
+        break
+      end
+    end
+
+    return alias_value
   end
 
 end
