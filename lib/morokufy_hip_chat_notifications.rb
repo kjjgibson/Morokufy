@@ -35,7 +35,7 @@ class MorokufyHipChatNotifications
     reason = reason_for_event(event)
 
     room_notification = build_room_notification(title)
-    room_notification.card = build_card(title, "#{title} #{reason}", gs_player)
+    room_notification.card = build_card(title, "#{title} #{reason}", gs_player, points_awarded, point_type)
 
     send_hip_chat_notification(room_notification)
   end
@@ -73,14 +73,16 @@ class MorokufyHipChatNotifications
   # * +activity_html+ - The html to display on the collapsed card
   # * +description+ - Description to display when expanding the card
   # * +gs_player+ - The Game Server Player used to get the points and achievements
-  private def build_card(activity_html, description, gs_player)
+  # * +points_awarded+ - The number of points that were awarded
+  # * +point_type_awarded+ - The type of points that were awarded
+  private def build_card(activity_html, description, gs_player, points_awarded, point_type_awarded)
     card = HipChat::Card.new(id: SecureRandom.uuid, style: HipChat::Card::Style::APPLICATION)
     card.format = HipChat::Card::Format::MEDIUM
     card.title = 'Morokufy'
     card.description = HipChat::CardDescription.new(value: description, format: HipChat::CardDescription::ValueFormat::HTML)
     card.icon = HipChat::Icon.new(url: 'http://moroku.com/wp-content/uploads/2015/12/weblogo150-50-copy.png')
     card.activity = HipChat::CardActivity.new(html: activity_html)
-    card.attributes = attributes_for_point_types(gs_player).concat([HipChat::CardAttribute.new(label: 'Achievements', value: HipChat::CardAttributeValue.new(label: "#{gs_player.achievement_awards.count}"))])
+    card.attributes = attributes_for_point_types(gs_player, points_awarded, point_type_awarded).concat([HipChat::CardAttribute.new(label: 'Achievements', value: HipChat::CardAttributeValue.new(label: "#{gs_player.achievement_awards.count}"))])
     return card
   end
 
@@ -89,10 +91,19 @@ class MorokufyHipChatNotifications
   # === Parameters
   #
   # * +gs_player+ - The Player to get the PointTypes from
-  private def attributes_for_point_types(gs_player)
+  # * +points_awarded+ - The number of points that were awarded
+  # * +point_type_awarded+ - The type of points that were awarded
+  private def attributes_for_point_types(gs_player, points_awarded, point_type_awarded)
     attributes = []
     gs_player.player_point_types.each do |player_point_type|
-      attributes << HipChat::CardAttribute.new(label: player_point_type.point_name, value: HipChat::CardAttributeValue.new(label: "#{player_point_type.count}"))
+
+      # If we were just awarded some points, update teh GS Player's total count for that point type
+      total_point_count = player_point_type.count
+      if player_point_type.point_name == point_type_awarded
+        total_point_count = total_point_count + points_awarded
+      end
+
+      attributes << HipChat::CardAttribute.new(label: player_point_type.point_name, value: HipChat::CardAttributeValue.new(label: "#{total_point_count}"))
     end
     return attributes
   end

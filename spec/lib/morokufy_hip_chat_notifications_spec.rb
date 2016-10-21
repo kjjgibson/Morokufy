@@ -102,7 +102,7 @@ describe 'MorokufyHipChatNotificationsSpec' do
         attributes = card.attributes
         expect(attributes.count).to eq(3)
         expect(attributes[0].label).to eq('Points')
-        expect(attributes[0].value.label).to eq('100')
+        expect(attributes[0].value.label).to eq('110')
         expect(attributes[1].label).to eq('Coins')
         expect(attributes[1].value.label).to eq('10')
         expect(attributes[2].label).to eq('Achievements')
