@@ -101,8 +101,8 @@ class MorokufyHipChatNotifications
       total_point_count = player_point_type.count
       Rails.logger.info("beginning total_point_count: #{total_point_count}")
       Rails.logger.info("player_point_type.point_name: #{player_point_type.point_name}, point_type_awarded: #{point_type_awarded}, points_awarded: #{points_awarded}")
-      Rails.logger.info("player_point_type.point_name.class: #{player_point_type.point_name}")
-      Rails.logger.info("point_type_awarded.class: #{point_type_awarded}")
+      Rails.logger.info("player_point_type.point_name.class: #{player_point_type.point_name.class}")
+      Rails.logger.info("point_type_awarded.class: #{point_type_awarded.class}")
       Rails.logger.info("player_point_type.point_name == point_type_awarded: #{player_point_type.point_name == point_type_awarded}")
       if player_point_type.point_name == point_type_awarded
         Rails.logger.info("adding newly awarded points")
