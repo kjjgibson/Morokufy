@@ -127,7 +127,22 @@ class ApplicationController < ActionController::Base
     notifications = MorokufyHipChatNotifications.new()
 
     (external_event_response.points_awarded || []).each do |points_award|
+      update_gs_player_with_points_award(gs_player, points_award)
       notifications.send_points_awarded_notification(points_award.count, points_award.point_type, player, gs_player, event_name)
+    end
+  end
+
+  # Update the GS Player's points with the points that have just been awarded by the latest execution of the rules engine
+  #
+  # === Parameters
+  #
+  # * +gs_player+ - The Player whose points to update
+  # * +points_award+ - The PointsAward object from the ExternalEventResponse
+  private def update_gs_player_with_points_award(gs_player, points_award)
+    gs_player.player_point_types.each do |player_point_type|
+      if player_point_type.point_name == points_award.point_type
+        player_point_type.count += points_award.count
+      end
     end
   end
 

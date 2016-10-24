@@ -214,20 +214,22 @@ describe ApplicationController, type: :controller do
         end
 
         it 'should send a HipChat notification for each point type awarded' do
-          expect_any_instance_of(MorokufyHipChatNotifications).to receive(:send_points_awarded_notification) do |_, points, point_type, player, gs_player, event_name|
-            expect(points).to eq(point_count_points)
-            expect(point_type).to eq(point_type_points)
-            expect(player).to eq(player)
-            expect(gs_player).to eq(gs_player)
-            expect(event_name).to eq(event_name)
+          expect_any_instance_of(MorokufyHipChatNotifications).to receive(:send_points_awarded_notification) do |_, points_param, point_type_param, player_param, gs_player_param, event_name_param|
+            expect(points_param).to eq(point_count_points)
+            expect(point_type_param).to eq(point_type_points)
+            expect(player_param).to eq(player)
+            expect(gs_player_param).to eq(gs_player)
+            expect(gs_player_param.player_point_types.first.count).to eq(1100)
+            expect(event_name_param).to eq(event_name)
           end
 
-          expect_any_instance_of(MorokufyHipChatNotifications).to receive(:send_points_awarded_notification) do |_, points, point_type, player, gs_player, event_name|
-            expect(points).to eq(point_count_coins)
-            expect(point_type).to eq(point_type_coins)
-            expect(player).to eq(player)
-            expect(gs_player).to eq(gs_player)
-            expect(event_name).to eq(event_name)
+          expect_any_instance_of(MorokufyHipChatNotifications).to receive(:send_points_awarded_notification) do |_, points_param, point_type_param, player_param, gs_player_param, event_name_param|
+            expect(points_param).to eq(point_count_coins)
+            expect(point_type_param).to eq(point_type_coins)
+            expect(player_param).to eq(player)
+            expect(gs_player_param).to eq(gs_player)
+            expect(gs_player_param.player_point_types.last.count).to eq(105)
+            expect(event_name_param).to eq(event_name)
           end
 
           ApplicationController.new().log_event(player, event_name, gs_player)
