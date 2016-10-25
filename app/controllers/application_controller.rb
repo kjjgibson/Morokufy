@@ -125,11 +125,14 @@ class ApplicationController < ActionController::Base
   # * +player+ - The Morokufy Player - used to get the alias when sending the HipChat message
   private def send_hip_chat_messages(external_event_response, event_name, player, gs_player)
     notifications = MorokufyHipChatNotifications.new()
+    points_awarded = external_event_response.points_awarded || []
 
-    (external_event_response.points_awarded || []).each do |points_award|
+    # Update the gs player with any points that were just awarded so that we can display the total point types correctly
+    points_awarded.each do |points_award|
       update_gs_player_with_points_award(gs_player, points_award)
-      notifications.send_points_awarded_notification(points_award.count, points_award.point_type, player, gs_player, event_name)
     end
+
+    notifications.send_points_awarded_notification(points_awarded, player, gs_player, event_name)
   end
 
   # Update the GS Player's points with the points that have just been awarded by the latest execution of the rules engine

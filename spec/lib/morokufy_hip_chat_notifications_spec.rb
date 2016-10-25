@@ -4,6 +4,7 @@ require 'hip_chat/hip_chat_request'
 require 'game_server/admin/request/external_event_request'
 require 'game_server/model/player'
 require 'game_server/model/player_point_type'
+require 'game_server/model/rule_result_points_award'
 
 describe 'MorokufyHipChatNotificationsSpec' do
 
@@ -15,6 +16,8 @@ describe 'MorokufyHipChatNotificationsSpec' do
     let(:email_alias) { FactoryGirl.build(:alias, alias_value: email, alias_type: Alias::AliasType::EMAIL) }
     let(:username_alias) { FactoryGirl.build(:alias, alias_value: username, alias_type: Alias::AliasType::USERNAME) }
     let(:gs_player) { GameServer::Model::Player.new('', '', '', '') }
+    let(:points_awarded) { [GameServer::Model::RuleResultPointsAward.new('Points', 10)] }
+    let(:selected_alias_value) { name_alias.alias_value }
 
     before do
       allow_any_instance_of(HipChat::HipChatRequest).to receive(:send_room_notification).and_return(true)
@@ -32,7 +35,7 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         player = FactoryGirl.create(:player, aliases: [username_alias, email_alias, name_alias])
 
-        MorokufyHipChatNotifications.new().send_points_awarded_notification(10, 'Points', player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
       end
     end
 
@@ -44,7 +47,7 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         player = FactoryGirl.create(:player, aliases: [username_alias, email_alias])
 
-        MorokufyHipChatNotifications.new().send_points_awarded_notification(10, 'Points', player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
       end
     end
 
@@ -56,7 +59,7 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         player = FactoryGirl.create(:player, aliases: [username_alias])
 
-        MorokufyHipChatNotifications.new().send_points_awarded_notification(10, 'Points', player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
       end
     end
 
@@ -68,7 +71,98 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         player = FactoryGirl.create(:player, aliases: [])
 
-        MorokufyHipChatNotifications.new().send_points_awarded_notification(10, 'Points', player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+      end
+    end
+
+    describe 'build_points_awarded_string' do
+      let(:player) { FactoryGirl.create(:player, aliases: [name_alias]) }
+      let(:send_points_awarded_notification_action) { MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT) }
+
+      context 'award points' do
+        context 'single point type' do
+          let(:points_awarded) { [GameServer::Model::RuleResultPointsAward.new('Points', 10)] }
+
+          it 'should generate the correct string' do
+            expect_send_room_notification_with_activity_html('<b>Bob</b> has been awarded <b>10</b> Points')
+
+            send_points_awarded_notification_action
+          end
+        end
+
+        context 'two point types' do
+          let(:points_awarded) { [GameServer::Model::RuleResultPointsAward.new('Points', 10), GameServer::Model::RuleResultPointsAward.new('Coins', 5)] }
+
+          it 'should generate the correct string' do
+            expect_send_room_notification_with_activity_html('<b>Bob</b> has been awarded <b>10</b> Points and <b>5</b> Coins')
+
+            send_points_awarded_notification_action
+          end
+        end
+
+        context 'three point types' do
+          let(:points_awarded) { [GameServer::Model::RuleResultPointsAward.new('Points', 10), GameServer::Model::RuleResultPointsAward.new('Coins', 5), GameServer::Model::RuleResultPointsAward.new('Gems', 1)] }
+
+          it 'should generate the correct string' do
+            expect_send_room_notification_with_activity_html('<b>Bob</b> has been awarded <b>10</b> Points, <b>5</b> Coins, and <b>1</b> Gems')
+
+            send_points_awarded_notification_action
+          end
+        end
+      end
+
+      context 'deduct points' do
+        context 'single point type' do
+          let(:points_awarded) { [GameServer::Model::RuleResultPointsAward.new('Points', -10)] }
+
+          it 'should generate the correct string' do
+            expect_send_room_notification_with_activity_html('<b>Bob</b> has lost <b>10</b> Points')
+
+            send_points_awarded_notification_action
+          end
+        end
+
+        context 'two point types' do
+          let(:points_awarded) { [GameServer::Model::RuleResultPointsAward.new('Points', -10), GameServer::Model::RuleResultPointsAward.new('Coins', -5)] }
+
+          it 'should generate the correct string' do
+            expect_send_room_notification_with_activity_html('<b>Bob</b> has lost <b>10</b> Points and <b>5</b> Coins')
+
+            send_points_awarded_notification_action
+          end
+        end
+
+        context 'three point types' do
+          let(:points_awarded) { [GameServer::Model::RuleResultPointsAward.new('Points', -10), GameServer::Model::RuleResultPointsAward.new('Coins', -5), GameServer::Model::RuleResultPointsAward.new('Gems', -1)] }
+
+          it 'should generate the correct string' do
+            expect_send_room_notification_with_activity_html('<b>Bob</b> has lost <b>10</b> Points, <b>5</b> Coins, and <b>1</b> Gems')
+
+            send_points_awarded_notification_action
+          end
+        end
+      end
+
+      context 'award and deduct points' do
+        context 'two point types' do
+          let(:points_awarded) { [GameServer::Model::RuleResultPointsAward.new('Points', 10), GameServer::Model::RuleResultPointsAward.new('Coins', -5)] }
+
+          it 'should generate the correct string' do
+            expect_send_room_notification_with_activity_html('<b>Bob</b> has been awarded <b>10</b> Points. <b>Bob</b> has lost <b>5</b> Coins')
+
+            send_points_awarded_notification_action
+          end
+        end
+
+        context 'three point types' do
+          let(:points_awarded) { [GameServer::Model::RuleResultPointsAward.new('Points', 10), GameServer::Model::RuleResultPointsAward.new('Coins', -5), GameServer::Model::RuleResultPointsAward.new('Gems', 1)] }
+
+          it 'should generate the correct string' do
+            expect_send_room_notification_with_activity_html('<b>Bob</b> has been awarded <b>10</b> Points and <b>1</b> Gems. <b>Bob</b> has lost <b>5</b> Coins')
+
+            send_points_awarded_notification_action
+          end
+        end
       end
     end
 
@@ -109,6 +203,16 @@ describe 'MorokufyHipChatNotificationsSpec' do
         expect(attributes[2].value.label).to eq('3')
       end
     end
+
+    private def expect_send_room_notification_with_activity_html(html)
+      expect_any_instance_of(HipChat::HipChatRequest).to receive(:send_room_notification) do |_, _, room_notification|
+        card = room_notification.card
+        activity = card.activity
+
+        expect(activity.html).to eq(html)
+      end
+    end
+
   end
 
 end
