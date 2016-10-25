@@ -3,17 +3,17 @@ require 'game_server/admin/request/player_request'
 
 describe 'PlayerRequest' do
 
-  let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy#{resource_path}" }
+  let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy/admin#{resource_path}" }
   let(:resource_path) { '/players' }
   let(:mock_headers) { { 'Authorization': '123 : abc' } }
-
+  let(:expected_headers) { mock_headers.merge({ 'Content-Type': 'application/json' }) }
   let(:nickname) { 'Bob' }
   let(:request_body) { { nickname: nickname, ext_id: nickname }.to_json }
 
   describe '#create_player' do
 
     before do
-      allow(GameServer::AuthenticationHelper).to receive(:admin_gs_headers).with(request_body, URI.parse(request_path), 'POST').and_return(mock_headers)
+      allow(GameServer::AuthenticationHelper).to receive(:admin_gs_headers).with(request_body, URI.parse('/morokufy/admin/players'), 'POST').and_return(mock_headers)
     end
 
     context 'successful request' do
@@ -23,13 +23,13 @@ describe 'PlayerRequest' do
 
       before do
         allow(response_double).to receive(:body).and_return(response_body)
-        allow(response_double).to receive(:is_success?).and_return(true)
+        allow(response_double).to receive(:success?).and_return(true)
 
         allow(HTTParty).to receive(:post).and_return(response_double)
       end
 
       it 'should call the post method on HTTParty' do
-        expect(HTTParty).to receive(:post).with(URI.parse(request_path), { body: request_body, headers: mock_headers })
+        expect(HTTParty).to receive(:post).with(URI.parse('http://gameserver-morokufy.herokuapp.com/morokufy/admin/players'), { body: request_body, headers: expected_headers.stringify_keys })
 
         GameServer::Admin::Request::PlayerRequest.new().create_player(nickname)
       end
@@ -50,7 +50,7 @@ describe 'PlayerRequest' do
 
       before do
         allow(response_double).to receive(:body).and_return(response_body)
-        allow(response_double).to receive(:is_success?).and_return(false)
+        allow(response_double).to receive(:success?).and_return(false)
 
         allow(HTTParty).to receive(:post).and_return(response_double)
       end

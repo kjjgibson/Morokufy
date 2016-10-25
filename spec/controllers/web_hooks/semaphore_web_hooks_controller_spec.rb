@@ -6,89 +6,91 @@ describe WebHooks::SemaphoreWebHooksController, type: :controller do
 
     let(:name) { 'Bob' }
     let(:email) { 'bob@bob.com' }
-    let(:request_body) { { author_name: name, author_email: email } }
-    let(:create_player_response_double) { double('response') }
+    let(:result) { 'passed' }
+    let(:request_body) { { commit: { author_name: name, author_email: email }, result: result } }
 
     before do
-      allow_any_instance_of(GameServer::Admin::Request::PlayerRequest).to receive(:create_player).and_return(create_player_response_double)
+      allow(controller).to receive(:create_or_get_player).and_return(nil)
+      allow(controller).to receive(:log_event).and_return(nil)
+      allow(controller).to receive(:get_game_server_player).and_return(nil)
     end
 
-    context 'player does not exist' do
-
-      context 'successful request' do
-        let(:api_key) { '123' }
-        let(:shared_secret) { 'abc' }
-
-        before do
-          allow(create_player_response_double).to receive(:is_success?).and_return(true)
-          allow(create_player_response_double).to receive(:api_key).and_return(api_key)
-          allow(create_player_response_double).to receive(:shared_secret).and_return(shared_secret)
-        end
-
-        it 'should return 200' do
-          post :create, params: request_body
-
-          expect(response.response_code).to eq(200)
-        end
-
-        it 'should call the request class to make the request' do
-          expect_any_instance_of(GameServer::Admin::Request::PlayerRequest).to receive(:create_player).with(email)
-
-          post :create, params: request_body
-        end
-
-        it 'should create a MF player' do
-          expect do
-            post :create, params: request_body
-          end.to change(Player, :count).by(1)
-        end
-
-        it 'should create a player with the correct attributes' do
-          post :create, params: request_body
-
-          player = Player.last
-          expect(player.name).to eq(name)
-          expect(player.email).to eq(email)
-          expect(player.api_key).to eq(api_key)
-          expect(player.shared_secret).to eq(shared_secret)
-        end
+    it 'should attempt to create the player if it does not exist' do
+      expect(controller).to receive(:create_or_get_player) do |name_alias, email_alias|
+        expect(name_alias.alias_value).to eq(name)
+        expect(name_alias.alias_type).to eq(Alias::AliasType::NAME)
+        expect(email_alias.alias_value).to eq(email)
+        expect(email_alias.alias_type).to eq(Alias::AliasType::EMAIL)
       end
 
-      context 'failed request' do
-        before do
-          allow(create_player_response_double).to receive(:is_success?).and_return(false)
-          allow(create_player_response_double).to receive(:error_message).and_return('error')
-        end
-
-        it 'should return 200' do
-          post :create, params: request_body
-
-          expect(response.response_code).to eq(200)
-        end
-
-        it 'should not create a player' do
-          expect do
-            post :create, params: request_body
-          end.to change(Player, :count).by(0)
-        end
-      end
+      post :create, params: request_body
     end
 
-    context 'player already exists' do
+    context 'successful player create' do
+      let(:mf_player) { FactoryGirl.build(:player) }
+
       before do
-        FactoryGirl.create(:player, email: email)
+        allow(controller).to receive(:create_or_get_player).and_return(mf_player)
       end
 
-      it 'should return 200' do
+      it 'should get the gs player from the server' do
+        expect(controller).to receive(:get_game_server_player).with(mf_player)
+
         post :create, params: request_body
-
-        expect(response.response_code).to eq(200)
       end
 
-      it 'should not create a player' do
-        expect do
+      context 'successful get gs player' do
+        let(:gs_player) { GameServer::Model::Player.new('', '', '', '')}
+
+        before do
+          allow(controller).to receive(:get_game_server_player).and_return(gs_player)
+        end
+
+        context 'passed build' do
+          let(:result) { 'passed' }
+
+          it 'should log the event' do
+            expect(controller).to receive(:log_event).with(mf_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT, gs_player).and_return(nil)
+
+            post :create, params: request_body
+          end
+        end
+
+        context 'failed build' do
+          let(:result) { 'failed' }
+
+          it 'should log the event' do
+            expect(controller).to receive(:log_event).with(mf_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_FAILED_EVENT, gs_player).and_return(nil)
+
+            post :create, params: request_body
+          end
+        end
+      end
+
+      context 'unsuccessful get gs player' do
+        before do
+          allow(controller).to receive(:get_game_server_player).and_return(nil)
+        end
+
+        it 'should not log any events' do
+          expect(controller).not_to receive(:log_event)
+
           post :create, params: request_body
-        end.to change(Player, :count).by(0)
+        end
+      end
+    end
+
+    context 'unsuccessful player create' do
+      it 'should not get the gs player' do
+        expect(controller).not_to receive(:get_game_server_player)
+
+        post :create, params: request_body
+      end
+
+      it 'should not log the event' do
+        expect(controller).not_to receive(:log_event)
+
+        post :create, params: request_body
       end
     end
   end

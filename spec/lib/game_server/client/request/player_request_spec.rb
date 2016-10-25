@@ -3,34 +3,33 @@ require 'game_server/client/request/player_request'
 
 describe 'PlayerRequest' do
 
-  let(:request_path) { "http://gameserver-morokufy.herokuapp.com/morokufy#{resource_path}/#{nickname}" }
-  let(:resource_path) { '/players' }
   let(:mock_headers) { { 'Authorization': '123 : abc' } }
+  let(:expected_headers) { {'API-VERSION': 'v2'}.merge(mock_headers) }
   let(:api_key) { '123' }
   let(:shared_secret) { 'abc' }
   let(:nickname) { 'Bob' }
-  let(:request_body) { { }.to_json }
+  let(:request_body) { "" }
 
   describe '#get_player' do
 
     before do
-      allow(GameServer::AuthenticationHelper).to receive(:gs_headers).with(request_body, api_key, shared_secret, URI.parse(request_path), 'GET').and_return(mock_headers)
+      allow(GameServer::AuthenticationHelper).to receive(:gs_headers).with(request_body, api_key, shared_secret, URI.parse('/morokufy/client/players/Bob'), 'GET').and_return(mock_headers)
     end
 
     context 'successful request' do
 
       let(:response_double) { double('response') }
-      let(:response_body) { { nickname: 'nickname', ext_id: 'ext_id', avatar: 'avatar', theme: 'theme' }.to_json }
+      let(:response_body) { { nickname: 'nickname', ext_id: 'ext_id', avatar: 'avatar', theme: 'theme', point_types: [{ name: 'Points', amount: 100 }, { name: 'Coins', amount: 10 }] }.to_json }
 
       before do
         allow(response_double).to receive(:body).and_return(response_body)
-        allow(response_double).to receive(:is_success?).and_return(true)
+        allow(response_double).to receive(:success?).and_return(true)
 
         allow(HTTParty).to receive(:get).and_return(response_double)
       end
 
       it 'should call the post method on HTTParty' do
-        expect(HTTParty).to receive(:get).with(URI.parse(request_path), { headers: mock_headers })
+        expect(HTTParty).to receive(:get).with(URI.parse('http://gameserver-morokufy.herokuapp.com/morokufy/client/players/Bob'), { headers: expected_headers.deep_stringify_keys })
 
         GameServer::Client::Request::PlayerRequest.new(api_key, shared_secret).get_player(nickname)
       end
@@ -47,6 +46,13 @@ describe 'PlayerRequest' do
         expect(player.ext_id).to eq('ext_id')
         expect(player.avatar).to eq('avatar')
         expect(player.theme).to eq('theme')
+
+        player_point_types = player.player_point_types
+        expect(player_point_types.count).to eq(2)
+        expect(player_point_types[0].point_name).to eq('Points')
+        expect(player_point_types[0].count).to eq(100)
+        expect(player_point_types[1].point_name).to eq('Coins')
+        expect(player_point_types[1].count).to eq(10)
       end
     end
 
@@ -56,7 +62,7 @@ describe 'PlayerRequest' do
 
       before do
         allow(response_double).to receive(:body).and_return(response_body)
-        allow(response_double).to receive(:is_success?).and_return(false)
+        allow(response_double).to receive(:success?).and_return(false)
 
         allow(HTTParty).to receive(:get).and_return(response_double)
       end

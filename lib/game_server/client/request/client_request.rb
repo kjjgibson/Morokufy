@@ -33,8 +33,10 @@ module GameServer
         # * +id+ - The id of the resource to get. E.g 10 or name%20of%20thing - will be suffixed to the end of the URL
         #
         # @return HTTParty response object
-        def get(path, id)
-          return super(path, id, headers: client_headers("#{path}/#{id}", {}, 'GET'))
+        def get(path, id, headers: {})
+          path = "#{API_PATH}#{path}"
+
+          return super(path, id, headers: headers.merge(client_headers(path, "", 'GET', resource_id: id)))
         end
 
         # Perform a POST request
@@ -46,7 +48,8 @@ module GameServer
         #
         # @return HTTParty response object
         def post(path, body)
-          return super(path, body, headers: client_headers(path, body, 'POST'))
+          path = "#{API_PATH}#{path}"
+          return super(path, body, headers: client_headers(path, body.to_json, 'POST'))
         end
 
         # Construct the authentication headers required by the Game Server
@@ -58,9 +61,21 @@ module GameServer
         # * +method+ - The REST method. E.g. POST, GET, etc.
         #
         # @return Hash of headers
-        private def client_headers(path, body, method)
-          url = request_url_for_path(path)
-          return GameServer::AuthenticationHelper.gs_headers(body.to_json, api_key, shared_secret, url, method)
+        private def client_headers(path, body, method, resource_id: nil)
+          path = request_path(path, resource_id: resource_id)
+          return GameServer::AuthenticationHelper.gs_headers(body, api_key, shared_secret, path, method)
+        end
+
+        protected def request_path(path, resource_id: nil)
+          url_string = "/#{Rails.application.config.gameserver.tenant}/#{path}".squeeze('/') # Remove double slashes
+          if resource_id
+            if resource_id.is_a?(String)
+              resource_id = URI.encode(resource_id, /\W/)
+            end
+            url_string = "#{url_string}/#{resource_id}"
+          end
+
+          return URI.parse(url_string)
         end
 
       end

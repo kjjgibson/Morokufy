@@ -21,7 +21,7 @@ module GameServer
           response = post(PATH, body)
           response_body = JSON.parse(response.body, symbolize_names: true)
 
-          if response.is_success?
+          if response.success?
             api_key = response_body[:api_token]
             shared_secret = response_body[:shared_secret]
 

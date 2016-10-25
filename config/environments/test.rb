@@ -45,4 +45,9 @@ Rails.application.configure do
   config.gameserver.admin_shared_secret = 'abcdefg'
   config.gameserver.url = 'gameserver-morokufy.herokuapp.com/'
   config.gameserver.tenant = 'morokufy'
+
+  config.hip_chat = ActiveSupport::OrderedOptions.new
+  config.hip_chat.api_url = 'https://morokufy.hipchat.com'
+  config.hip_chat.room_id = 'test_room_id'
+  config.hip_chat.room_auth_token = 'test_room_auth_token'
 end

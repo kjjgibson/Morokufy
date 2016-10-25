@@ -16,6 +16,8 @@ module GameServer
     def self.gs_headers(body, gs_api_token, gs_shared_secret, request_path, request_method)
       datetime = Time.now.utc.strftime('%Y%m%d %H:%M:%S %Z')
 
+      Rails.logger.info("Constructing HMAC with: date = #{datetime}, content MD5 = #{md5_content_hash(body)}, request_path = #{request_path}, request_method = #{request_method}, gs_shared_secret = #{gs_shared_secret}")
+
       return { 'Date': datetime,
                'Content-MD5': md5_content_hash(body),
                'Authorization': "#{gs_api_token} : #{hmac_hash(gs_shared_secret, body, request_path, request_method, datetime)}",
