@@ -2,11 +2,12 @@
 #
 # Table name: players
 #
-#  id         :integer          not null, primary key
-#  name       :string
-#  email      :string
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id            :integer          not null, primary key
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  api_key       :string
+#  shared_secret :string
+#  identifier    :string
 #
 
 require 'rails_helper'

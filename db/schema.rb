@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161019065020) do
+ActiveRecord::Schema.define(version: 20161108061309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,4 +41,49 @@ ActiveRecord::Schema.define(version: 20161019065020) do
     t.datetime "updated_at",      null: false
   end
 
+  create_table "web_hook_alias_keys", force: :cascade do |t|
+    t.integer  "web_hook_id"
+    t.string   "alias_key"
+    t.string   "alias_type"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["web_hook_id"], name: "index_web_hook_alias_keys_on_web_hook_id", using: :btree
+  end
+
+  create_table "web_hook_consequents", force: :cascade do |t|
+    t.integer  "web_hook_rule_id"
+    t.string   "event_name"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["web_hook_rule_id"], name: "index_web_hook_consequents_on_web_hook_rule_id", using: :btree
+  end
+
+  create_table "web_hook_predicates", force: :cascade do |t|
+    t.integer  "web_hook_rule_id"
+    t.string   "web_hook_key"
+    t.string   "expected_value"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["web_hook_rule_id"], name: "index_web_hook_predicates_on_web_hook_rule_id", using: :btree
+  end
+
+  create_table "web_hook_rules", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "web_hook_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["web_hook_id"], name: "index_web_hook_rules_on_web_hook_id", using: :btree
+  end
+
+  create_table "web_hooks", force: :cascade do |t|
+    t.string   "name"
+    t.string   "request_url"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_foreign_key "web_hook_alias_keys", "web_hooks"
+  add_foreign_key "web_hook_consequents", "web_hook_rules"
+  add_foreign_key "web_hook_predicates", "web_hook_rules"
+  add_foreign_key "web_hook_rules", "web_hooks"
 end

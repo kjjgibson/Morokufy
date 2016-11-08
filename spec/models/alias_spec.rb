@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: aliases
+#
+#  id          :integer          not null, primary key
+#  alias_type  :string
+#  alias_value :string
+#  player_id   :integer
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+
 require 'rails_helper'
 require 'shoulda-matchers'
 
