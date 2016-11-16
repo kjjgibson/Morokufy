@@ -3,6 +3,7 @@ module WebHooks
 
     def create
       status = :created
+      Rails.logger.info(request.env)
       web_hook = WebHook.find_by_request_url(request.referrer)
 
       if web_hook
