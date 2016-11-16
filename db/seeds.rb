@@ -5,3 +5,27 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+web_hook = WebHook.new
+web_hook.name = 'Semaphore'
+web_hook.request_url = 'TODO'
+
+name_alias = web_hook.web_hook_alias_keys.build
+name_alias.alias_key = 'commit.author_name'
+name_alias.alias_type = Alias::AliasType::NAME
+
+email_alias = web_hook.web_hook_alias_keys.build
+email_alias.alias_key = 'commit.author_email'
+email_alias.alias_type = Alias::AliasType::EMAIL
+
+rule = web_hook.web_hook_rules.build
+rule.name = 'Post Build'
+
+predicate = rule.predicates.build
+predicate.web_hook_key = 'result'
+predicate.expected_value = 'passed'
+
+consequent = rule.consequents.build
+consequent.event_name = GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT
+
+web_hook.save!

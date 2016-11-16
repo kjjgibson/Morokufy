@@ -37,4 +37,62 @@ describe WebHookPredicate, type: :model do
     it { should validate_presence_of :web_hook_rule }
   end
 
+  describe '#is_true' do
+    let(:web_hook_key) { 'result' }
+    let(:expected_value) { 'pass' }
+    let(:web_hook_predicate) { FactoryGirl.create(:web_hook_predicate, web_hook_key: web_hook_key, expected_value: expected_value) }
+
+    context 'key not found' do
+      context 'single level key' do
+        let(:web_hook_key) { 'result' }
+
+        it 'should return false' do
+          expect(web_hook_predicate.is_true?({})).to eq(false)
+        end
+      end
+
+      context 'multi level key' do
+        let(:web_hook_key) { 'build.result' }
+
+        it 'should return false' do
+          expect(web_hook_predicate.is_true?({})).to eq(false)
+        end
+      end
+    end
+
+    context 'key found' do
+      context 'single level key' do
+        let(:web_hook_key) { 'result' }
+
+        context 'found value matches expected value' do
+          it 'should return true' do
+            expect(web_hook_predicate.is_true?({ result: 'pass' })).to eq(true)
+          end
+        end
+
+        context 'found value does not match expected value' do
+          it 'should return false' do
+            expect(web_hook_predicate.is_true?({ result: 'fail' })).to eq(false)
+          end
+        end
+      end
+
+      context 'multi level key' do
+        let(:web_hook_key) { 'build.result' }
+
+        context 'found value matches expected value' do
+          it 'should return true' do
+            expect(web_hook_predicate.is_true?({ build: { result: 'pass' } })).to eq(true)
+          end
+        end
+
+        context 'found value does not match expected value' do
+          it 'should return false' do
+            expect(web_hook_predicate.is_true?({ build: { result: 'fail' } })).to eq(false)
+          end
+        end
+      end
+    end
+  end
+
 end

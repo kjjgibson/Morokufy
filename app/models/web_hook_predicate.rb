@@ -24,4 +24,21 @@ class WebHookPredicate < ApplicationRecord
 
   validates_presence_of :web_hook_rule, :web_hook_key, :expected_value
 
+  # Return true if the key in the params provided has the expected value
+  # The web_gook_key is formatted as a period separated string denoting the hash nesting of the params
+  #
+  # === Parameters
+  #
+  # * +params+ - A hash of params in which to search
+  def is_true?(params)
+    key_paths = web_hook_key.split('.')
+    found_value = params
+    key_paths.each do |key_path|
+      found_value = found_value[key_path.to_sym]
+      break unless found_value
+    end
+
+    return found_value == expected_value
+  end
+
 end

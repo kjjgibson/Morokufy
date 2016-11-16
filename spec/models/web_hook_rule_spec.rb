@@ -37,4 +37,69 @@ describe WebHookRule, type: :model do
     it { should validate_presence_of :web_hook }
   end
 
+  describe '#evaluate' do
+    let(:web_hook_rule) { FactoryGirl.create(:web_hook_rule, web_hook_predicates: web_hook_predicates) }
+
+    context 'no predicates' do
+      let(:web_hook_predicates) { [] }
+
+      it 'should return true' do
+        expect(web_hook_rule.evaluate({})).to eq(true)
+      end
+    end
+
+    context 'single predicate' do
+      let(:predicate) { FactoryGirl.create(:web_hook_predicate) }
+      let(:web_hook_predicates) { [predicate] }
+
+      context 'predicate is false' do
+        before do
+          allow(predicate).to receive(:is_true?).and_return(false)
+        end
+
+        it 'should return false' do
+          expect(web_hook_rule.evaluate({})).to eq(false)
+        end
+      end
+
+      context 'predicate is true' do
+        before do
+          allow(predicate).to receive(:is_true?).and_return(true)
+        end
+
+        it 'should return true' do
+          expect(web_hook_rule.evaluate({})).to eq(true)
+        end
+      end
+    end
+
+    context 'multiple predicates' do
+      let(:predicate1) { FactoryGirl.create(:web_hook_predicate) }
+      let(:predicate2) { FactoryGirl.create(:web_hook_predicate) }
+      let(:web_hook_predicates) { [predicate1, predicate2] }
+
+      context 'one predicate is false' do
+        before do
+          allow(predicate1).to receive(:is_true?).and_return(false)
+          allow(predicate2).to receive(:is_true?).and_return(true)
+        end
+
+        it 'should return false' do
+          expect(web_hook_rule.evaluate({})).to eq(false)
+        end
+      end
+
+      context 'all predicates are true' do
+        before do
+          allow(predicate1).to receive(:is_true?).and_return(true)
+          allow(predicate2).to receive(:is_true?).and_return(true)
+        end
+
+        it 'should return true' do
+          expect(web_hook_rule.evaluate({})).to eq(true)
+        end
+      end
+    end
+  end
+
 end

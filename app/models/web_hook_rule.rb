@@ -25,4 +25,24 @@ class WebHookRule < ApplicationRecord
 
   validates_presence_of :name, :web_hook
 
+  # Evaluate the rule by evaluating each of the rules predicates
+  # If all predicates are true then we return true, otherwise false
+  #
+  # === Parameters
+  #
+  # * +params+ - A hash of params in which to search
+  def evaluate(params)
+    result = true
+
+    web_hook_predicates.each do |predicate|
+      unless predicate.is_true?(params)
+        result = false
+        #If we've found a predicate that evaluates to false there's no point in continuing
+        break
+      end
+    end
+
+    return result
+  end
+
 end
