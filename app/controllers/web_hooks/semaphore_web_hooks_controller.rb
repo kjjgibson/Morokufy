@@ -3,12 +3,12 @@ module WebHooks
 
     def create
       status = :created
-      web_hook = WebHook.find_by_request_url(request.original_url)
+      web_hook = WebHook.find_by_request_url(request.referrer)
 
       if web_hook
         web_hook.run(params)
       else
-        Rails.logger.error("WebHook not supported for url: #{request.original_url}")
+        Rails.logger.error("WebHook not supported for url: #{request.referrer}")
         status = :not_found
       end
 

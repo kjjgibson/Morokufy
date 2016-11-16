@@ -9,6 +9,10 @@ describe WebHooks::SemaphoreWebHooksController, type: :controller do
     let(:result) { 'passed' }
     let(:request_body) { { commit: { author_name: name, author_email: email }, result: result } }
 
+    before do
+      allow_any_instance_of(ActionDispatch::Request).to receive(:referrer).and_return('referrer.com')
+    end
+
     context 'no matching web hook' do
       it 'should return 404 not found' do
         post :create, params: request_body
@@ -18,7 +22,7 @@ describe WebHooks::SemaphoreWebHooksController, type: :controller do
     end
 
     context 'matching web hook' do
-      let!(:web_hook) { FactoryGirl.create(:web_hook, request_url: 'http://test.host/web_hooks/semaphore_web_hooks') }
+      let!(:web_hook) { FactoryGirl.create(:web_hook, request_url: 'referrer.com') }
 
       it 'should run the web hook' do
         expect_any_instance_of(WebHook).to receive(:run)
