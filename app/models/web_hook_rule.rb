@@ -20,8 +20,8 @@
 class WebHookRule < ApplicationRecord
 
   belongs_to :web_hook
-  has_many :web_hook_predicates
-  has_many :web_hook_consequents
+  has_many :web_hook_predicates, dependent: :destroy
+  has_many :web_hook_consequents, dependent: :destroy
 
   validates_presence_of :name, :web_hook
 

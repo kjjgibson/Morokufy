@@ -15,8 +15,8 @@ require 'game_server/client/request/player_request'
 
 class WebHook < ApplicationRecord
 
-  has_many :web_hook_rules
-  has_many :web_hook_alias_keys
+  has_many :web_hook_rules, dependent: :destroy
+  has_many :web_hook_alias_keys, dependent: :destroy
 
   validates_presence_of :name, :source_identifier
   validates_uniqueness_of :name, :source_identifier
