@@ -51,8 +51,6 @@ class WebHook < ApplicationRecord
   def aliases_for_params(params)
     aliases = []
 
-    params.deep_symbolize_keys!
-
     web_hook_alias_keys.each do |web_hook_alias_key|
       key_paths = web_hook_alias_key.alias_key.split('.')
       alias_value = params
