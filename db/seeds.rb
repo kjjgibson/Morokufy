@@ -1,3 +1,5 @@
+require 'game_server/admin/request/external_event_request'
+
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 #
@@ -21,11 +23,11 @@ email_alias.alias_type = Alias::AliasType::EMAIL
 rule = web_hook.web_hook_rules.build
 rule.name = 'Post Build'
 
-predicate = rule.predicates.build
+predicate = rule.web_hook_predicates.build
 predicate.web_hook_key = 'result'
 predicate.expected_value = 'passed'
 
-consequent = rule.consequents.build
+consequent = rule.web_hook_consequents.build
 consequent.event_name = GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT
 
 web_hook.save!
