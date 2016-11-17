@@ -8,7 +8,7 @@
 
 web_hook = WebHook.new
 web_hook.name = 'Semaphore'
-web_hook.request_url = 'TODO'
+web_hook.source_identifier = 'semaphore'
 
 name_alias = web_hook.web_hook_alias_keys.build
 name_alias.alias_key = 'commit.author_name'

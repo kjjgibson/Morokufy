@@ -6,11 +6,11 @@ require 'game_server/client/request/player_request'
 #
 # Table name: web_hooks
 #
-#  id          :integer          not null, primary key
-#  name        :string
-#  request_url :string
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id                :integer          not null, primary key
+#  name              :string
+#  source_identifier :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #
 
 class WebHook < ApplicationRecord
@@ -18,8 +18,8 @@ class WebHook < ApplicationRecord
   has_many :web_hook_rules
   has_many :web_hook_alias_keys
 
-  validates_presence_of :name, :request_url
-  validates_uniqueness_of :name, :request_url
+  validates_presence_of :name, :source_identifier
+  validates_uniqueness_of :name, :source_identifier
 
   def run(params)
     aliases = aliases_for_params(params)

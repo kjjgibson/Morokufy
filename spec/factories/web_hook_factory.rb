@@ -12,6 +12,6 @@
 FactoryGirl.define do
   factory :web_hook do
     name { Faker::App.name }
-    request_url { Faker::Internet.url }
+    source_identifier { SecureRandom.hex }
   end
 end

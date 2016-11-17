@@ -26,9 +26,9 @@ describe WebHook, type: :model do
 
   describe 'validations' do
     it { should validate_presence_of :name }
-    it { should validate_presence_of :request_url }
+    it { should validate_presence_of :source_identifier }
     it { should validate_uniqueness_of :name }
-    it { should validate_uniqueness_of :request_url }
+    it { should validate_uniqueness_of :source_identifier }
   end
 
   describe '#run' do
