@@ -21,7 +21,7 @@ email_alias.alias_key = 'commit.author_email'
 email_alias.alias_type = Alias::AliasType::EMAIL
 
 rule = web_hook.web_hook_rules.build
-rule.name = 'Post Build'
+rule.name = 'Post Build Success'
 
 predicate = rule.web_hook_predicates.build
 predicate.web_hook_key = 'result'
@@ -29,5 +29,15 @@ predicate.expected_value = 'passed'
 
 consequent = rule.web_hook_consequents.build
 consequent.event_name = GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT
+
+rule = web_hook.web_hook_rules.build
+rule.name = 'Post Build Failed'
+
+predicate = rule.web_hook_predicates.build
+predicate.web_hook_key = 'result'
+predicate.expected_value = 'failed'
+
+consequent = rule.web_hook_consequents.build
+consequent.event_name = GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_FAILED_EVENT
 
 web_hook.save!

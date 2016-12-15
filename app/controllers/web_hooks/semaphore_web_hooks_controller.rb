@@ -1,6 +1,7 @@
 module WebHooks
   class SemaphoreWebHooksController < ApplicationController
 
+    #TODO: rename this and the route to something generic
     def create
       status = :created
       web_hook = WebHook.find_by_source_identifier(params[:source])
