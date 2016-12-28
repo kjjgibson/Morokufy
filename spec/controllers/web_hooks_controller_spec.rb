@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe WebHooks::SemaphoreWebHooksController, type: :controller do
+describe WebHooksController, type: :controller do
 
   describe '#create' do
 
