@@ -109,12 +109,11 @@ class MorokufyHipChatNotifications
   # === Parameters
   #
   # * +event+ - The EventType that caused the Player to be awarded with whatever it was
-  #TODO: This should be part of the WebHook configuration
   private def reason_for_event(event)
     case event
-      when GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_FAILED_EVENT
+      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_FAILED_EVENT
         reason = 'for a failed Semaphore build.'
-      when GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT
+      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT
         reason = 'for a successful Semaphore build.'
       else
         reason = ''

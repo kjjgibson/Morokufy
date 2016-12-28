@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'morokufy_hip_chat_notifications'
 require 'hip_chat/hip_chat_request'
-require 'game_server/admin/request/external_event_request'
+require 'game_server/admin/request/player_external_event_request'
 require 'game_server/model/player'
 require 'game_server/model/player_point_type'
 require 'game_server/model/rule_result_points_award'
@@ -73,7 +73,7 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         player = FactoryGirl.create(:player, aliases: [username_alias, email_alias, name_alias])
 
-        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
       end
     end
 
@@ -85,7 +85,7 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         player = FactoryGirl.create(:player, aliases: [username_alias, email_alias])
 
-        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
       end
     end
 
@@ -97,7 +97,7 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         player = FactoryGirl.create(:player, aliases: [username_alias])
 
-        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
       end
     end
 
@@ -109,13 +109,13 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         player = FactoryGirl.create(:player, aliases: [])
 
-        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
       end
     end
 
     describe 'build_points_awarded_string' do
       let(:player) { FactoryGirl.create(:player, aliases: [name_alias]) }
-      let(:send_points_awarded_notification_action) { MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT) }
+      let(:send_points_awarded_notification_action) { MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT) }
 
       context 'award points' do
         context 'single point type' do

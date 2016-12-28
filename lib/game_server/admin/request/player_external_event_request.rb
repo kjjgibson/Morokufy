@@ -6,9 +6,9 @@ require 'game_server/model/rule_result_achievement_award'
 module GameServer
   module Admin
     module Request
-      class ExternalEventRequest < GameServer::Admin::Request::AdminRequest
+      class PlayerExternalEventRequest < GameServer::Admin::Request::AdminRequest
 
-        PATH = '/external_events'
+        PATH = '/player_external_events'
 
         module EventTypes
           SEMAPHORE_BUILD_FAILED_EVENT = 'SemaphoreBuildFailed'
@@ -17,7 +17,7 @@ module GameServer
 
         def log_event(player_ext_id, external_event_name)
           body = { player: player_ext_id, external_event_id: external_event_name }
-          response = post("#{PATH}/log_event", body, headers: { 'API-VERSION': 'v2' })
+          response = post(PATH, body)
 
           response_body = JSON.parse(response.body, symbolize_names: true)
 

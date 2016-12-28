@@ -1,4 +1,4 @@
-require 'game_server/admin/request/external_event_request'
+require 'game_server/admin/request/player_external_event_request'
 require 'game_server/admin/request/achievement_request'
 require 'morokufy_hip_chat_notifications'
 
@@ -38,7 +38,7 @@ class Player < ApplicationRecord
   # * +event_name+ - The name of the ExternalEvent to log
   # * +gs_player+ - The Game Server Player object - used to get the total points and Achievements to display in the Hip Chat message
   def log_event(event_name, gs_player)
-    response = GameServer::Admin::Request::ExternalEventRequest.new().log_event(identifier, event_name)
+    response = GameServer::Admin::Request::PlayerExternalEventRequest.new().log_event(identifier, event_name)
 
     if response.is_success?
       create_rule_consequent_events(response, event_name)

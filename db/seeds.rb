@@ -1,4 +1,4 @@
-require 'game_server/admin/request/external_event_request'
+require 'game_server/admin/request/player_external_event_request'
 
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
@@ -28,7 +28,7 @@ predicate.web_hook_key = 'result'
 predicate.expected_value = 'passed'
 
 consequent = rule.web_hook_consequents.build
-consequent.event_name = GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT
+consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT
 
 rule = web_hook.web_hook_rules.build
 rule.name = 'Post Build Failed'
@@ -38,6 +38,6 @@ predicate.web_hook_key = 'result'
 predicate.expected_value = 'failed'
 
 consequent = rule.web_hook_consequents.build
-consequent.event_name = GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_FAILED_EVENT
+consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_FAILED_EVENT
 
 web_hook.save!

@@ -1,6 +1,6 @@
 require 'game_server/model/player_point_type'
 require 'game_server/model/player'
-require 'game_server/admin/request/external_event_request'
+require 'game_server/admin/request/player_external_event_request'
 require 'game_server/admin/request/achievement_request'
 
 # == Schema Information
@@ -45,7 +45,7 @@ describe Player, type: :model do
     end
 
     before do
-      allow_any_instance_of(GameServer::Admin::Request::ExternalEventRequest).to receive(:log_event).and_return(log_event_response_double)
+      allow_any_instance_of(GameServer::Admin::Request::PlayerExternalEventRequest).to receive(:log_event).and_return(log_event_response_double)
 
       allow(log_event_response_double).to receive(:points_awarded).and_return(nil)
       allow(log_event_response_double).to receive(:achievements_awarded).and_return(nil)
@@ -60,7 +60,7 @@ describe Player, type: :model do
       end
 
       it 'should call the request class to make the request' do
-        expect_any_instance_of(GameServer::Admin::Request::ExternalEventRequest).to receive(:log_event).with(player.identifier, event_name)
+        expect_any_instance_of(GameServer::Admin::Request::PlayerExternalEventRequest).to receive(:log_event).with(player.identifier, event_name)
 
         player.log_event(event_name, gs_player)
       end
