@@ -1,6 +1,7 @@
 require 'game_server/model/player_point_type'
 require 'game_server/model/player'
 require 'game_server/admin/request/external_event_request'
+require 'game_server/admin/request/achievement_request'
 
 # == Schema Information
 #
@@ -50,6 +51,7 @@ describe Player, type: :model do
       allow(log_event_response_double).to receive(:achievements_awarded).and_return(nil)
 
       allow_any_instance_of(MorokufyHipChatNotifications).to receive(:send_points_awarded_notification).and_return(true)
+      allow_any_instance_of(MorokufyHipChatNotifications).to receive(:send_achievement_awarded_notification).and_return(true)
     end
 
     context 'successful Game Server request' do
@@ -110,10 +112,15 @@ describe Player, type: :model do
         let(:achievement_award_1) { GameServer::Model::RuleResultAchievementAward.new(1) }
         let(:achievement_award_2) { GameServer::Model::RuleResultAchievementAward.new(2) }
         let(:achievements_awarded) { [achievement_award_1, achievement_award_2] }
+        let(:achievement) { GameServer::Model::Achievement.new('name', 'description', 'image_url') }
 
         before do
           allow(log_event_response_double).to receive(:points_awarded).and_return(nil)
           allow(log_event_response_double).to receive(:achievements_awarded).and_return(achievements_awarded)
+
+          get_achievement_double = double('get_achievement')
+          allow_any_instance_of(GameServer::Admin::Request::AchievementRequest).to receive(:get_achievement).and_return(get_achievement_double)
+          allow(get_achievement_double).to receive(:achievement).and_return(achievement)
         end
 
         it 'should create RuleConsequentEvents for each achievement awarded' do
@@ -128,6 +135,15 @@ describe Player, type: :model do
           rule_consequent_event = RuleConsequentEvent.find_by_achievement_id(achievement_award_2.achievement_id)
           expect(rule_consequent_event.consequent_type).to eq(RuleConsequentEvent::ConsequentType::ACHIEVEMENT_CONSEQUENT)
           expect(rule_consequent_event.event_name).to eq(event_name)
+        end
+
+        it 'should send a HipChat notification for the Achievement' do
+          expect_any_instance_of(MorokufyHipChatNotifications).to receive(:send_achievement_awarded_notification) do |_, achievement_param, player_param|
+            expect(achievement_param).to eq(achievement)
+            expect(player_param).to eq(player)
+          end
+
+          player.log_event(event_name, gs_player)
         end
       end
 

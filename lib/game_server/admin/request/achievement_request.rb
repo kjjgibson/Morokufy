@@ -1,5 +1,6 @@
 require 'game_server/admin/request/admin_request'
 require 'game_server/admin/response/get_achievement_response'
+require 'game_server/model/achievement'
 
 # This class is used to perform requests to the Admin Achievements Game Server API
 
@@ -20,12 +21,15 @@ module GameServer
           response = get(PATH, achievement_id)
           response_body = JSON.parse(response.body, symbolize_names: true)
 
-          name = response_body[:name]
-          description = response_body[:description]
-          image_url = response_body[:image_url]
           error_message = response_body[:error_message]
 
-          return GameServer::Admin::Response::GetAchievementResponse.new(response.success?, error_message, name, description, image_url)
+          if response.success?
+            achievement = GameServer::Model::Achievement.new(response_body[:name], response_body[:description], response_body[:image_url])
+          else
+            achievement = nil
+          end
+
+          return GameServer::Admin::Response::GetAchievementResponse.new(response.success?, error_message, achievement)
         end
 
       end

@@ -37,9 +37,12 @@ describe 'AchievementRequest' do
 
         expect(get_achievement_response.success).to eq(true)
         expect(get_achievement_response.error_message).to eq(nil)
-        expect(get_achievement_response.name).to eq('name')
-        expect(get_achievement_response.description).to eq('description')
-        expect(get_achievement_response.image_url).to eq('image_url')
+
+        achievement = get_achievement_response.achievement
+        expect(achievement).not_to eq(nil)
+        expect(achievement.name).to eq('name')
+        expect(achievement.description).to eq('description')
+        expect(achievement.image_url).to eq('image_url')
       end
     end
 
@@ -59,9 +62,7 @@ describe 'AchievementRequest' do
 
         expect(get_achievement_response.success).to eq(false)
         expect(get_achievement_response.error_message).to eq('error')
-        expect(get_achievement_response.name).to eq(nil)
-        expect(get_achievement_response.description).to eq(nil)
-        expect(get_achievement_response.image_url).to eq(nil)
+        expect(get_achievement_response.achievement).to eq(nil)
       end
     end
   end

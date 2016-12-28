@@ -11,11 +11,12 @@ require 'hip_chat/card_description'
 
 class MorokufyHipChatNotifications
 
-  def send_achievement_awarded_notification(achievement_name, achievement_description, achievement_image_url, player_name)
-    title = "#{player_name} has been awarded the \"#{achievement_name}\" Achievement"
+  def send_achievement_awarded_notification(achievement, player)
+    player_alias = get_most_sensible_alias_value(player)
+    title = "#{player_alias} has been awarded the \"#{achievement.name}\" Achievement"
 
     room_notification = build_room_notification(title)
-    room_notification.card = build_achievement_media_card(achievement_image_url, title, achievement_description)
+    room_notification.card = build_achievement_media_card(achievement.image_url, title, achievement.description)
 
     send_hip_chat_notification(room_notification)
   end

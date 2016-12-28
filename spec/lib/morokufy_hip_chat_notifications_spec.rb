@@ -5,38 +5,43 @@ require 'game_server/admin/request/external_event_request'
 require 'game_server/model/player'
 require 'game_server/model/player_point_type'
 require 'game_server/model/rule_result_points_award'
+require 'game_server/model/achievement'
 
 describe 'MorokufyHipChatNotificationsSpec' do
 
   describe '#send_achievement_awarded_notification' do
+    let(:player_name) { 'Bob' }
+    let(:name_alias) { FactoryGirl.build(:alias, alias_value: player_name, alias_type: Alias::AliasType::NAME) }
+    let(:player) { FactoryGirl.create(:player, aliases: [name_alias]) }
+    let(:achievement) { GameServer::Model::Achievement.new('name', 'description', 'image_url') }
 
     it 'should send the request' do
-      expect_send_achievement_notification('name', 'description', 'url', 'bob')
+      expect_send_achievement_notification(achievement, player_name)
 
-      MorokufyHipChatNotifications.new().send_achievement_awarded_notification('name', 'description', 'url', 'bob')
+      MorokufyHipChatNotifications.new().send_achievement_awarded_notification(achievement, player)
     end
 
-    private def expect_send_achievement_notification(achievement_name, achievement_description, achievement_image_url, player_name)
+    private def expect_send_achievement_notification(achievement, player_name)
       expect_any_instance_of(HipChat::HipChatRequest).to receive(:send_room_notification) do |_, room, room_notification|
         expect(room.room_id).to eq('test_room_id')
         expect(room.room_auth_token).to eq('test_room_auth_token')
 
         expect(room_notification.color).to eq('gray')
-        expect(room_notification.message).to eq("#{player_name} has been awarded the \"#{achievement_name}\" Achievement")
+        expect(room_notification.message).to eq("#{player_name} has been awarded the \"#{achievement.name}\" Achievement")
         expect(room_notification.notify).to eq(false)
 
         card = room_notification.card
         expect(card).not_to eq(nil)
-        expect(card.title).to eq("#{player_name} has been awarded the \"#{achievement_name}\" Achievement")
+        expect(card.title).to eq("#{player_name} has been awarded the \"#{achievement.name}\" Achievement")
 
         description = card.description
         expect(description).not_to eq(nil)
-        expect(description.value).to eq(achievement_description)
+        expect(description.value).to eq(achievement.description)
         expect(description.format).to eq('html')
 
         thumbnail = card.thumbnail
         expect(thumbnail).not_to eq(nil)
-        expect(thumbnail.url).to eq(achievement_image_url)
+        expect(thumbnail.url).to eq(achievement.image_url)
       end
     end
   end
