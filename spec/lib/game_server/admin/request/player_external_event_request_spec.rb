@@ -17,7 +17,7 @@ describe 'PlayerPlayerExternalEventRequest' do
     context 'successful request' do
 
       let(:response_double) { double('response') }
-      let(:response_body) { { rule_results: { points_awarded: { points: 10, coins: 2 }, achievements_awarded: [{ achievement_id: 1 }, { achievement_id: 2 }] } }.to_json }
+      let(:response_body) { { points_awarded: { points: 10, coins: 2 }, achievements_awarded: [{ achievement_id: 1 }, { achievement_id: 2 }] }.to_json }
 
       before do
         allow(response_double).to receive(:body).and_return(response_body)
