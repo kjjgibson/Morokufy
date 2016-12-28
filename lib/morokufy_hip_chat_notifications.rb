@@ -5,13 +5,19 @@ require 'hip_chat/icon'
 require 'hip_chat/card_attribute'
 require 'hip_chat/card_attribute_value'
 require 'hip_chat/card_activity'
+require 'hip_chat/card_thumbnail'
 require 'hip_chat/room'
 require 'hip_chat/card_description'
 
 class MorokufyHipChatNotifications
 
-  def send_achievement_awarded_notification(achievement_name, player_name, gs_player)
-    #TODO
+  def send_achievement_awarded_notification(achievement_name, achievement_description, achievement_image_url, player_name)
+    title = "#{player_name} has been awarded the \"#{achievement_name}\" Achievement"
+
+    room_notification = build_room_notification(title)
+    room_notification.card = build_achievement_media_card(achievement_image_url, title, achievement_description)
+
+    send_hip_chat_notification(room_notification)
   end
 
   # Send a card room notification alerting users of points awarded
@@ -27,7 +33,7 @@ class MorokufyHipChatNotifications
     reason = reason_for_event(event)
 
     room_notification = build_room_notification(title)
-    room_notification.card = build_card(title, "#{title} #{reason}", gs_player)
+    room_notification.card = build_points_activity_card(title, "#{title} #{reason}", gs_player)
 
     send_hip_chat_notification(room_notification)
   end
@@ -65,7 +71,7 @@ class MorokufyHipChatNotifications
   # * +activity_html+ - The html to display on the collapsed card
   # * +description+ - Description to display when expanding the card
   # * +gs_player+ - The Game Server Player used to get the points and achievements
-  private def build_card(activity_html, description, gs_player)
+  private def build_points_activity_card(activity_html, description, gs_player)
     card = HipChat::Card.new(id: SecureRandom.uuid, style: HipChat::Card::Style::APPLICATION)
     card.format = HipChat::Card::Format::MEDIUM
     card.title = 'Morokufy'
@@ -73,6 +79,14 @@ class MorokufyHipChatNotifications
     card.icon = HipChat::Icon.new(url: 'http://moroku.com/wp-content/uploads/2015/12/weblogo150-50-copy.png')
     card.activity = HipChat::CardActivity.new(html: activity_html)
     card.attributes = attributes_for_point_types(gs_player).concat([HipChat::CardAttribute.new(label: 'Achievements', value: HipChat::CardAttributeValue.new(label: "#{gs_player.achievement_awards.count}"))])
+    return card
+  end
+
+  private def build_achievement_media_card(image_url, title, description)
+    card = HipChat::Card.new(id: SecureRandom.uuid, style: HipChat::Card::Style::MEDIA)
+    card.title = title
+    card.description = HipChat::CardDescription.new(value: description, format: HipChat::CardDescription::ValueFormat::HTML)
+    card.thumbnail = HipChat::CardThumbnail.new(url: image_url)
     return card
   end
 

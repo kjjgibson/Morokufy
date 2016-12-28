@@ -8,6 +8,39 @@ require 'game_server/model/rule_result_points_award'
 
 describe 'MorokufyHipChatNotificationsSpec' do
 
+  describe '#send_achievement_awarded_notification' do
+
+    it 'should send the request' do
+      expect_send_achievement_notification('name', 'description', 'url', 'bob')
+
+      MorokufyHipChatNotifications.new().send_achievement_awarded_notification('name', 'description', 'url', 'bob')
+    end
+
+    private def expect_send_achievement_notification(achievement_name, achievement_description, achievement_image_url, player_name)
+      expect_any_instance_of(HipChat::HipChatRequest).to receive(:send_room_notification) do |_, room, room_notification|
+        expect(room.room_id).to eq('test_room_id')
+        expect(room.room_auth_token).to eq('test_room_auth_token')
+
+        expect(room_notification.color).to eq('gray')
+        expect(room_notification.message).to eq("#{player_name} has been awarded the \"#{achievement_name}\" Achievement")
+        expect(room_notification.notify).to eq(false)
+
+        card = room_notification.card
+        expect(card).not_to eq(nil)
+        expect(card.title).to eq("#{player_name} has been awarded the \"#{achievement_name}\" Achievement")
+
+        description = card.description
+        expect(description).not_to eq(nil)
+        expect(description.value).to eq(achievement_description)
+        expect(description.format).to eq('html')
+
+        thumbnail = card.thumbnail
+        expect(thumbnail).not_to eq(nil)
+        expect(thumbnail.url).to eq(achievement_image_url)
+      end
+    end
+  end
+
   describe '#send_points_awarded_notification' do
     let(:name) { 'Bob' }
     let(:email) { 'bob@gmail.com' }
