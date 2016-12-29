@@ -27,16 +27,16 @@ describe 'MorokufyHipChatNotificationsSpec' do
         expect(room.room_auth_token).to eq('test_room_auth_token')
 
         expect(room_notification.color).to eq('gray')
-        expect(room_notification.message).to eq("#{player_name} has been awarded the \"#{achievement.name}\" Achievement")
+        expect(room_notification.message).to eq("#{player_name} unlocked an Achievement!")
         expect(room_notification.notify).to eq(false)
 
         card = room_notification.card
         expect(card).not_to eq(nil)
-        expect(card.title).to eq("#{player_name} has been awarded the \"#{achievement.name}\" Achievement")
+        expect(card.title).to eq("#{player_name} unlocked an Achievement!")
 
         description = card.description
         expect(description).not_to eq(nil)
-        expect(description.value).to eq(achievement.description)
+        expect(description.value).to eq("#{player_name} has been awarded the <b>\"#{achievement.name}\"</b> Achievement.\n#{achievement.description}")
         expect(description.format).to eq('html')
 
         thumbnail = card.thumbnail
