@@ -33,7 +33,7 @@ class WebHookPredicate < ApplicationRecord
   #
   # * +params+ - A hash of params in which to search
   def is_true?(params)
-    return false
+    raise NotImplementedError
   end
 
   # Get the value for a json key path

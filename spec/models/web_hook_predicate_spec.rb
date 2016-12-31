@@ -40,8 +40,8 @@ describe WebHookPredicate, type: :model do
   describe '#is_true?' do
     let(:web_hook_predicate) { FactoryGirl.create(:web_hook_predicate) }
 
-    it 'should return false' do
-      expect(web_hook_predicate.is_true?(nil)).to eq(false)
+    it 'should raise an error' do
+      expect(web_hook_predicate.is_true?(nil)).to raise_error
     end
   end
 

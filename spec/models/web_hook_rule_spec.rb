@@ -54,6 +54,7 @@ describe WebHookRule, type: :model do
 
       context 'predicate is false' do
         before do
+          allow(predicate).to receive(:specific).and_return(predicate)
           allow(predicate).to receive(:is_true?).and_return(false)
         end
 
@@ -64,6 +65,7 @@ describe WebHookRule, type: :model do
 
       context 'predicate is true' do
         before do
+          allow(predicate).to receive(:specific).and_return(predicate)
           allow(predicate).to receive(:is_true?).and_return(true)
         end
 
@@ -80,6 +82,8 @@ describe WebHookRule, type: :model do
 
       context 'one predicate is false' do
         before do
+          allow(predicate1).to receive(:specific).and_return(predicate1)
+          allow(predicate2).to receive(:specific).and_return(predicate2)
           allow(predicate1).to receive(:is_true?).and_return(false)
           allow(predicate2).to receive(:is_true?).and_return(true)
         end
@@ -91,6 +95,8 @@ describe WebHookRule, type: :model do
 
       context 'all predicates are true' do
         before do
+          allow(predicate1).to receive(:specific).and_return(predicate1)
+          allow(predicate2).to receive(:specific).and_return(predicate2)
           allow(predicate1).to receive(:is_true?).and_return(true)
           allow(predicate2).to receive(:is_true?).and_return(true)
         end
