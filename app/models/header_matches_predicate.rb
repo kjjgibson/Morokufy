@@ -1,25 +1,26 @@
 # == Schema Information
 #
-# Table name: value_matches_predicates
+# Table name: header_matches_predicates
 #
 #  id             :integer          not null, primary key
+#  header         :string
 #  expected_value :string
 #
 
-class ValueMatchesPredicate < ApplicationRecord
+class HeaderMatchesPredicate < ApplicationRecord
 
   acts_as :web_hook_predicate
 
-  validates_presence_of :expected_value
+  validates_presence_of :header, :expected_value
 
-  # Return true if the key in the params provided has the expected value
+  # Return true if the HTTP header of the request has the expected value
   #
   # === Parameters
   #
   # * +request+ - The HTTP Request object for the webhook
   # * +params+ - A hash of params in which to search
   def is_true?(request, params)
-    return value_for_key_path(params) == expected_value
+    return request.headers[header] == expected_value
   end
 
 end

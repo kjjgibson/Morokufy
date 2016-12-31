@@ -17,7 +17,7 @@ describe KeyPresentPredicate, type: :model do
         let(:key_path) { 'result' }
 
         it 'should return false' do
-          expect(key_present_predicate.is_true?({})).to eq(false)
+          expect(key_present_predicate.is_true?(nil, {})).to eq(false)
         end
       end
 
@@ -25,7 +25,7 @@ describe KeyPresentPredicate, type: :model do
         let(:key_path) { 'build.result' }
 
         it 'should return false' do
-          expect(key_present_predicate.is_true?({})).to eq(false)
+          expect(key_present_predicate.is_true?(nil, {})).to eq(false)
         end
       end
     end
@@ -35,7 +35,7 @@ describe KeyPresentPredicate, type: :model do
         let(:key_path) { 'result' }
 
         it 'should return true' do
-          expect(key_present_predicate.is_true?({ result: 'pass' })).to eq(true)
+          expect(key_present_predicate.is_true?(nil, { result: 'pass' })).to eq(true)
         end
       end
 
@@ -43,7 +43,7 @@ describe KeyPresentPredicate, type: :model do
         let(:key_path) { 'build.result' }
 
         it 'should return true' do
-          expect(key_present_predicate.is_true?({ build: { result: 'pass' } })).to eq(true)
+          expect(key_present_predicate.is_true?(nil, { build: { result: 'pass' } })).to eq(true)
         end
       end
     end

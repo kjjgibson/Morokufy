@@ -30,12 +30,13 @@ class WebHookRule < ApplicationRecord
   #
   # === Parameters
   #
+  # * +request+ - The HTTP Request object for the webhook
   # * +params+ - A hash of params in which to search
-  def evaluate(params)
+  def evaluate(request, params)
     result = true
 
     web_hook_predicates.each do |predicate|
-      unless predicate.specific.is_true?(params)
+      unless predicate.specific.is_true?(request, params)
         result = false
         #If we've found a predicate that evaluates to false there's no point in continuing
         break

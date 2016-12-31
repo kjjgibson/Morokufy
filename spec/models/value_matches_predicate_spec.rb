@@ -21,7 +21,7 @@ describe ValueMatchesPredicate, type: :model do
         let(:key_path) { 'result' }
 
         it 'should return false' do
-          expect(value_matches_predicate.is_true?({})).to eq(false)
+          expect(value_matches_predicate.is_true?(nil, {})).to eq(false)
         end
       end
 
@@ -29,7 +29,7 @@ describe ValueMatchesPredicate, type: :model do
         let(:key_path) { 'build.result' }
 
         it 'should return false' do
-          expect(value_matches_predicate.is_true?({})).to eq(false)
+          expect(value_matches_predicate.is_true?(nil, {})).to eq(false)
         end
       end
     end
@@ -40,13 +40,13 @@ describe ValueMatchesPredicate, type: :model do
 
         context 'found value matches expected value' do
           it 'should return true' do
-            expect(value_matches_predicate.is_true?({ result: 'pass' })).to eq(true)
+            expect(value_matches_predicate.is_true?(nil, { result: 'pass' })).to eq(true)
           end
         end
 
         context 'found value does not match expected value' do
           it 'should return false' do
-            expect(value_matches_predicate.is_true?({ result: 'fail' })).to eq(false)
+            expect(value_matches_predicate.is_true?(nil, { result: 'fail' })).to eq(false)
           end
         end
       end
@@ -56,13 +56,13 @@ describe ValueMatchesPredicate, type: :model do
 
         context 'found value matches expected value' do
           it 'should return true' do
-            expect(value_matches_predicate.is_true?({ build: { result: 'pass' } })).to eq(true)
+            expect(value_matches_predicate.is_true?(nil, { build: { result: 'pass' } })).to eq(true)
           end
         end
 
         context 'found value does not match expected value' do
           it 'should return false' do
-            expect(value_matches_predicate.is_true?({ build: { result: 'fail' } })).to eq(false)
+            expect(value_matches_predicate.is_true?(nil, { build: { result: 'fail' } })).to eq(false)
           end
         end
       end

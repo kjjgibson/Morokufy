@@ -23,6 +23,7 @@ WebHook.transaction do
   email_alias.alias_type = Alias::AliasType::EMAIL
 
   web_hook.web_hook_rules.destroy_all
+  #===== Successful Build Rule
   rule = web_hook.web_hook_rules.build
   rule.name = 'Post Build Success'
 
@@ -34,6 +35,7 @@ WebHook.transaction do
   consequent = rule.web_hook_consequents.build
   consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT
 
+  #===== Failed Build Rule
   rule = web_hook.web_hook_rules.build
   rule.name = 'Post Build Failed'
 
@@ -62,16 +64,20 @@ WebHook.transaction do
   username_alias.alias_type = Alias::AliasType::USERNAME
 
   web_hook.web_hook_rules.destroy_all
+  #===== Repo Push Rule
   rule = web_hook.web_hook_rules.build
   rule.name = 'Repository Push'
 
   rule.web_hook_predicates.destroy_all
-  predicate = KeyPresentPredicate.new(web_hook_rule: rule, key_path: 'push')
+  predicate = HeaderMatchesPredicate.new(web_hook_rule: rule, header: 'X-Event-Key', expected_value: 'repo:push')
   rule.web_hook_predicates << predicate
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
   consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_REPOSITORY_PUSH
+
+  #===== PR Created Rule
+  #TODO:
 
   web_hook.save!
 

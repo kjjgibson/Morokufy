@@ -24,15 +24,16 @@ class WebHookPredicate < ApplicationRecord
   actable
   belongs_to :web_hook_rule
 
-  validates_presence_of :web_hook_rule, :key_path
+  validates_presence_of :web_hook_rule
 
   # Return true if this predicate evaluates to true
   # Implementation of this method depends on the subclass
   #
   # === Parameters
   #
+  # * +request+ - The HTTP Request object for the webhook
   # * +params+ - A hash of params in which to search
-  def is_true?(params)
+  def is_true?(request, params)
     raise NotImplementedError
   end
 

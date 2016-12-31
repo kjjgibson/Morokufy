@@ -13,8 +13,9 @@ class KeyPresentPredicate < ApplicationRecord
   #
   # === Parameters
   #
+  # * +request+ - The HTTP Request object for the webhook
   # * +params+ - A hash of params in which to search
-  def is_true?(params)
+  def is_true?(request, params)
     return value_for_key_path(params).present?
   end
 

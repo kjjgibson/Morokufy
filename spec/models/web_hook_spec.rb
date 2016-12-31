@@ -36,6 +36,7 @@ describe WebHook, type: :model do
     let(:params) { { param: 'value' } }
     let(:player) { instance_double(Player) }
     let(:game_server_player) { instance_double(GameServer::Model::Player) }
+    let(:request) { double('request') }
 
     context 'aliases found' do
       before do
@@ -53,9 +54,9 @@ describe WebHook, type: :model do
           end
 
           it 'should evaluate the rules' do
-            expect(web_hook).to receive(:evaluate_web_hook_rules).with(params, player, game_server_player)
+            expect(web_hook).to receive(:evaluate_web_hook_rules).with(request, params, player, game_server_player)
 
-            web_hook.run(params)
+            web_hook.run(request, params)
           end
         end
 
@@ -67,7 +68,7 @@ describe WebHook, type: :model do
           it 'should not evaluate the rules' do
             expect(web_hook).not_to receive(:evaluate_web_hook_rules)
 
-            web_hook.run(params)
+            web_hook.run(request, params)
           end
         end
       end
@@ -80,7 +81,7 @@ describe WebHook, type: :model do
         it 'should not evaluate the rules' do
           expect(web_hook).not_to receive(:evaluate_web_hook_rules)
 
-          web_hook.run(params)
+          web_hook.run(request, params)
         end
       end
     end
@@ -93,7 +94,7 @@ describe WebHook, type: :model do
       it 'should not evaluate the rules' do
         expect(web_hook).not_to receive(:evaluate_web_hook_rules)
 
-        web_hook.run(params)
+        web_hook.run(request, params)
       end
     end
   end
@@ -179,6 +180,7 @@ describe WebHook, type: :model do
     let(:web_hook_consequent) { FactoryGirl.build(:web_hook_consequent, event_name: 'event_name') }
     let(:params) { { param: 'value' } }
     let(:game_server_player) { GameServer::Model::Player.new('nickname', 'ext_id', 'avatar', 'theme') }
+    let(:request) { double('request') }
 
     context 'rule evaluates to true' do
       before do
@@ -188,7 +190,7 @@ describe WebHook, type: :model do
       it 'should log an event for each consequent' do
         expect(player).to receive(:log_event).with(web_hook_consequent.event_name, game_server_player).twice
 
-        web_hook.evaluate_web_hook_rules(params, player, game_server_player)
+        web_hook.evaluate_web_hook_rules(request, params, player, game_server_player)
       end
     end
 
@@ -200,7 +202,7 @@ describe WebHook, type: :model do
       it 'should not log any events' do
         expect(player).not_to receive(:log_event)
 
-        web_hook.evaluate_web_hook_rules(params, player, game_server_player)
+        web_hook.evaluate_web_hook_rules(request, params, player, game_server_player)
       end
     end
   end

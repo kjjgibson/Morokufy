@@ -33,7 +33,6 @@ describe WebHookPredicate, type: :model do
   end
 
   describe 'validations' do
-    it { should validate_presence_of :key_path }
     it { should validate_presence_of :web_hook_rule }
   end
 
@@ -41,7 +40,9 @@ describe WebHookPredicate, type: :model do
     let(:web_hook_predicate) { FactoryGirl.create(:web_hook_predicate) }
 
     it 'should raise an error' do
-      expect(web_hook_predicate.is_true?(nil)).to raise_error
+      expect do
+        web_hook_predicate.is_true?(nil, nil)
+      end.to raise_error
     end
   end
 

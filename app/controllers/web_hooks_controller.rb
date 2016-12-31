@@ -8,7 +8,7 @@ class WebHooksController < ApplicationController
 
     if web_hook
       Rails.logger.info("Processing webhook request...")
-      web_hook.run(params)
+      web_hook.run(request, params)
     else
       Rails.logger.error("WebHook not supported for url: #{request.referrer}")
       status = :not_found
