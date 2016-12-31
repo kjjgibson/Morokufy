@@ -77,7 +77,64 @@ WebHook.transaction do
   consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_REPOSITORY_PUSH
 
   #===== PR Created Rule
-  #TODO:
+  rule = web_hook.web_hook_rules.build
+  rule.name = 'PR Created'
+
+  rule.web_hook_predicates.destroy_all
+  predicate = HeaderMatchesPredicate.new(web_hook_rule: rule, header: 'X-Event-Key', expected_value: 'pullrequest:created')
+  rule.web_hook_predicates << predicate
+
+  rule.web_hook_consequents.destroy_all
+  consequent = rule.web_hook_consequents.build
+  consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_PULL_REQUEST_CREATED
+
+  #===== PR Updated Rule
+  rule = web_hook.web_hook_rules.build
+  rule.name = 'PR Updated'
+
+  rule.web_hook_predicates.destroy_all
+  predicate = HeaderMatchesPredicate.new(web_hook_rule: rule, header: 'X-Event-Key', expected_value: 'pullrequest:updated')
+  rule.web_hook_predicates << predicate
+
+  rule.web_hook_consequents.destroy_all
+  consequent = rule.web_hook_consequents.build
+  consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_PULL_REQUEST_UPDATED
+
+  #===== PR Approved Rule
+  rule = web_hook.web_hook_rules.build
+  rule.name = 'PR Approved'
+
+  rule.web_hook_predicates.destroy_all
+  predicate = HeaderMatchesPredicate.new(web_hook_rule: rule, header: 'X-Event-Key', expected_value: 'pullrequest:approved')
+  rule.web_hook_predicates << predicate
+
+  rule.web_hook_consequents.destroy_all
+  consequent = rule.web_hook_consequents.build
+  consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_PULL_REQUEST_APPROVED
+
+  #===== PR Merged Rule
+  rule = web_hook.web_hook_rules.build
+  rule.name = 'PR Merged'
+
+  rule.web_hook_predicates.destroy_all
+  predicate = HeaderMatchesPredicate.new(web_hook_rule: rule, header: 'X-Event-Key', expected_value: 'pullrequest:fulfilled')
+  rule.web_hook_predicates << predicate
+
+  rule.web_hook_consequents.destroy_all
+  consequent = rule.web_hook_consequents.build
+  consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_PULL_REQUEST_MERGED
+
+  #===== PR Comment Created Rule
+  rule = web_hook.web_hook_rules.build
+  rule.name = 'PR Comment Created'
+
+  rule.web_hook_predicates.destroy_all
+  predicate = HeaderMatchesPredicate.new(web_hook_rule: rule, header: 'X-Event-Key', expected_value: 'pullrequest:comment_created')
+  rule.web_hook_predicates << predicate
+
+  rule.web_hook_consequents.destroy_all
+  consequent = rule.web_hook_consequents.build
+  consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_PULL_REQUEST_COMMENT_CREATED
 
   web_hook.save!
   #=======================================

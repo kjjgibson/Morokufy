@@ -81,6 +81,15 @@ Rule.transaction do
   #============== BitBucket ==============
   r = create_event_created_rule('Bitbucket Repository Push', 'BitbucketRepositoryPush')
   create_points_consequents(r, [{ name: 'Points', count: 5 }, { name: 'Exp', count: 50 }])
-
+  r = create_event_created_rule('Bitbucket PR Created', 'BitbucketPullRequestCreated')
+  create_points_consequents(r, [{ name: 'Points', count: 10 }, { name: 'Exp', count: 100 }])
+  r = create_event_created_rule('Bitbucket PR Updated', 'BitbucketPullRequestUpdated')
+  create_points_consequents(r, [{ name: 'Points', count: 1 }, { name: 'Exp', count: 10 }])
+  r = create_event_created_rule('Bitbucket PR Approved', 'BitbucketPullRequestApproved')
+  create_points_consequents(r, [{ name: 'Points', count: 1 }, { name: 'Exp', count: 10 }])
+  r = create_event_created_rule('Bitbucket PR Merged', 'BitbucketPullRequestMerged')
+  create_points_consequents(r, [{ name: 'Points', count: 50 }, { name: 'Exp', count: 500 }])
+  r = create_event_created_rule('Bitbucket Comment Created', 'BitbucketPullRequestCommentCreated')
+  create_points_consequents(r, [{ name: 'Points', count: 2 }, { name: 'Exp', count: 20 }])
   #=======================================
 end
