@@ -116,6 +116,8 @@ class MorokufyHipChatNotifications
         reason = 'for a failed Semaphore build.'
       when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT
         reason = 'for a successful Semaphore build.'
+      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_REPOSITORY_PUSH
+        reason = 'for a push to a Bitbucket repository'
       else
         reason = ''
     end

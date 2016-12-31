@@ -128,10 +128,14 @@ class WebHook < ApplicationRecord
   def evaluate_web_hook_rules(params, player, game_server_player)
     web_hook_rules.each do |web_hook_rule|
       if web_hook_rule.evaluate(params)
+        Rails.logger.info('WebHook rule evaluated to true, executing consequents')
+
         web_hook_rule.web_hook_consequents.each do |consequent|
           event_name = consequent.event_name
           player.log_event(event_name, game_server_player)
         end
+      else
+        Rails.logger.info("WebHook rule evaluated to false")
       end
     end
   end

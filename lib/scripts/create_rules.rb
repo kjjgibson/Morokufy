@@ -81,6 +81,6 @@ Rule.transaction do
   #============== BitBucket ==============
   r = create_event_created_rule('Bitbucket Repository Push', 'BitbucketRepositoryPush')
   create_points_consequents(r, [{ name: 'Points', count: 5 }, { name: 'Exp', count: 50 }])
-  
+
   #=======================================
 end
