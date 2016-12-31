@@ -53,10 +53,10 @@ end
 Rule.transaction do
   #============== Semaphore ==============
   r = create_event_created_rule('Semaphore Failed Build', 'SemaphoreBuildFailed')
-  create_points_consequents(r, [{ name: 'Points', count: -10}])
+  create_points_consequents(r, [{ name: 'Points', count: -10 }])
 
   r = create_event_created_rule('Semaphore Successful Build', 'SemaphoreBuildPassed')
-  create_points_consequents(r, [{ name: 'Points', count: 10}, { name: 'Exp', count: 100}])
+  create_points_consequents(r, [{ name: 'Points', count: 10 }, { name: 'Exp', count: 100 }])
 
   r = create_event_initial_rule('One Successful Semaphore Build', 'SemaphoreBuildPassed', 1)
   create_achievement_consequents(r, ['Does it Work?'])
@@ -79,6 +79,7 @@ Rule.transaction do
   #=======================================
 
   #============== BitBucket ==============
-  $TODO
+  r = create_event_created_rule('Bitbucket Repository Push', 'BitbucketRepositoryPush')
+  create_points_consequents(r, [{ name: 'Points', count: 5 }, { name: 'Exp', count: 50 }])
   #=======================================
 end
