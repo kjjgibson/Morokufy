@@ -13,6 +13,12 @@ module GameServer
         module EventTypes
           SEMAPHORE_BUILD_FAILED_EVENT = 'SemaphoreBuildFailed'
           SEMAPHORE_BUILD_PASSED_EVENT = 'SemaphoreBuildPassed'
+          BITBUCKET_REPOSITORY_PUSH = 'BitbucketRepositoryPush'
+          BITBUCKET_PULL_REQUEST_CREATED = 'BitbucketPullRequestCreated'
+          BITBUCKET_PULL_REQUEST_UPDATED = 'BitbucketPullRequestUpdated'
+          BITBUCKET_PULL_REQUEST_APPROVED = 'BitbucketPullRequestApproved'
+          BITBUCKET_PULL_REQUEST_MERGED = 'BitbucketPullRequestMerged'
+          BITBUCKET_PULL_REQUEST_COMMENT_CREATED = 'BitbucketPullRequestCommentCreated'
         end
 
         def log_event(player_ext_id, external_event_name)

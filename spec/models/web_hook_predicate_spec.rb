@@ -29,67 +29,58 @@ describe WebHookPredicate, type: :model do
 
   describe 'associations' do
     it { should belong_to :web_hook_rule }
+    it { expect(WebHookPredicate).to be_actable }
   end
 
   describe 'validations' do
-    it { should validate_presence_of :web_hook_key }
-    it { should validate_presence_of :expected_value }
+    it { should validate_presence_of :key_path }
     it { should validate_presence_of :web_hook_rule }
   end
 
-  describe '#is_true' do
-    let(:web_hook_key) { 'result' }
-    let(:expected_value) { 'pass' }
-    let(:web_hook_predicate) { FactoryGirl.create(:web_hook_predicate, web_hook_key: web_hook_key, expected_value: expected_value) }
+  describe '#is_true?' do
+    let(:web_hook_predicate) { FactoryGirl.create(:web_hook_predicate) }
+
+    it 'should return false' do
+      expect(web_hook_predicate.is_true?(nil)).to eq(false)
+    end
+  end
+
+  describe '#value_for_key_path' do
+    let(:key_path) { 'result' }
+    let(:web_hook_predicate) { FactoryGirl.create(:web_hook_predicate, key_path: key_path) }
 
     context 'key not found' do
       context 'single level key' do
-        let(:web_hook_key) { 'result' }
+        let(:key_path) { 'result' }
 
         it 'should return false' do
-          expect(web_hook_predicate.is_true?({})).to eq(false)
+          expect(web_hook_predicate.value_for_key_path({})).to eq(nil)
         end
       end
 
       context 'multi level key' do
-        let(:web_hook_key) { 'build.result' }
+        let(:key_path) { 'build.result' }
 
         it 'should return false' do
-          expect(web_hook_predicate.is_true?({})).to eq(false)
+          expect(web_hook_predicate.value_for_key_path({})).to eq(nil)
         end
       end
     end
 
     context 'key found' do
       context 'single level key' do
-        let(:web_hook_key) { 'result' }
+        let(:key_path) { 'result' }
 
-        context 'found value matches expected value' do
-          it 'should return true' do
-            expect(web_hook_predicate.is_true?({ result: 'pass' })).to eq(true)
-          end
-        end
-
-        context 'found value does not match expected value' do
-          it 'should return false' do
-            expect(web_hook_predicate.is_true?({ result: 'fail' })).to eq(false)
-          end
+        it 'should return the value' do
+          expect(web_hook_predicate.value_for_key_path({ result: 'pass' })).to eq('pass')
         end
       end
 
       context 'multi level key' do
-        let(:web_hook_key) { 'build.result' }
+        let(:key_path) { 'build.result' }
 
-        context 'found value matches expected value' do
-          it 'should return true' do
-            expect(web_hook_predicate.is_true?({ build: { result: 'pass' } })).to eq(true)
-          end
-        end
-
-        context 'found value does not match expected value' do
-          it 'should return false' do
-            expect(web_hook_predicate.is_true?({ build: { result: 'fail' } })).to eq(false)
-          end
+        it 'should return the value' do
+          expect(web_hook_predicate.value_for_key_path({ build: { result: 'pass' } })).to eq('pass')
         end
       end
     end

@@ -4,6 +4,8 @@ class WebHooksController < ApplicationController
     status = :created
     web_hook = WebHook.find_by_source_identifier(params[:source])
 
+    Rails.logger.info("Webhook received with params: #{params}")
+
     if web_hook
       web_hook.run(params)
     else

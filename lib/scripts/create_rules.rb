@@ -51,6 +51,7 @@ def create_achievement_consequents(rule, achievement_names)
 end
 
 Rule.transaction do
+  #============== Semaphore ==============
   r = create_event_created_rule('Semaphore Failed Build', 'SemaphoreBuildFailed')
   create_points_consequents(r, [{ name: 'Points', count: -10}])
 
@@ -75,4 +76,9 @@ Rule.transaction do
   create_achievement_consequents(r, ['It Worked On MY Machine'])
   r = create_event_initial_rule('Five Failed Semaphore Builds', 'SemaphoreBuildFailed', 5)
   create_achievement_consequents(r, ['Testing Your Patience'])
+  #=======================================
+
+  #============== BitBucket ==============
+  $TODO
+  #=======================================
 end

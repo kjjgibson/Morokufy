@@ -4,10 +4,11 @@
 #
 #  id               :integer          not null, primary key
 #  web_hook_rule_id :integer
-#  web_hook_key     :string
-#  expected_value   :string
+#  key_path         :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  actable_id       :integer
+#  actable_type     :string
 #
 # Indexes
 #
@@ -20,25 +21,35 @@
 
 class WebHookPredicate < ApplicationRecord
 
+  actable
   belongs_to :web_hook_rule
 
-  validates_presence_of :web_hook_rule, :web_hook_key, :expected_value
+  validates_presence_of :web_hook_rule, :key_path
 
-  # Return true if the key in the params provided has the expected value
-  # The web_gook_key is formatted as a period separated string denoting the hash nesting of the params
+  # Return true if this predicate evaluates to true
+  # Implementation of this method depends on the subclass
   #
   # === Parameters
   #
   # * +params+ - A hash of params in which to search
   def is_true?(params)
-    key_paths = web_hook_key.split('.')
-    found_value = params
-    key_paths.each do |key_path|
-      found_value = found_value[key_path.to_sym]
-      break unless found_value
+    return false
+  end
+
+  # Get the value for a json key path
+  #
+  # === Parameters
+  #
+  # * +params+ - A hash of params in which to search
+  def value_for_key_path(params)
+    keys = key_path.split('.')
+    value = params
+    keys.each do |key|
+      value = value[key.to_sym]
+      break unless value
     end
 
-    return found_value == expected_value
+    return value
   end
 
 end

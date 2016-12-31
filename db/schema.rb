@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161117060451) do
+ActiveRecord::Schema.define(version: 20161231060417) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,9 @@ ActiveRecord::Schema.define(version: 20161117060451) do
     t.integer  "player_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+  end
+
+  create_table "key_present_predicates", force: :cascade do |t|
   end
 
   create_table "players", force: :cascade do |t|
@@ -39,6 +42,10 @@ ActiveRecord::Schema.define(version: 20161117060451) do
     t.string   "event_name"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+  end
+
+  create_table "value_matches_predicates", force: :cascade do |t|
+    t.string "expected_value"
   end
 
   create_table "web_hook_alias_keys", force: :cascade do |t|
@@ -60,10 +67,11 @@ ActiveRecord::Schema.define(version: 20161117060451) do
 
   create_table "web_hook_predicates", force: :cascade do |t|
     t.integer  "web_hook_rule_id"
-    t.string   "web_hook_key"
-    t.string   "expected_value"
+    t.string   "key_path"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+    t.integer  "actable_id"
+    t.string   "actable_type"
     t.index ["web_hook_rule_id"], name: "index_web_hook_predicates_on_web_hook_rule_id", using: :btree
   end
 

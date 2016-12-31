@@ -9,6 +9,7 @@ require 'game_server/admin/request/player_external_event_request'
 #   Character.create(name: 'Luke', movie: movies.first)
 
 WebHook.transaction do
+  #============== Semaphore ==============
   web_hook = WebHook.find_or_initialize_by(name: 'Semaphore')
   web_hook.source_identifier = 'semaphore'
 
@@ -26,9 +27,8 @@ WebHook.transaction do
   rule.name = 'Post Build Success'
 
   rule.web_hook_predicates.destroy_all
-  predicate = rule.web_hook_predicates.build
-  predicate.web_hook_key = 'result'
-  predicate.expected_value = 'passed'
+  predicate = ValueMatchesPredicate.new(web_hook_rule: rule, key_path: 'result', expected_value: 'passed')
+  rule.web_hook_predicates << predicate
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
@@ -38,13 +38,43 @@ WebHook.transaction do
   rule.name = 'Post Build Failed'
 
   rule.web_hook_predicates.destroy_all
-  predicate = rule.web_hook_predicates.build
-  predicate.web_hook_key = 'result'
-  predicate.expected_value = 'failed'
+  predicate = ValueMatchesPredicate.new(web_hook_rule: rule, key_path: 'result', expected_value: 'failed')
+  rule.web_hook_predicates << predicate
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
   consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_FAILED_EVENT
 
   web_hook.save!
+  #=======================================
+
+  #============== BitBucket ==============
+  web_hook = WebHook.find_or_initialize_by(name: 'Bitbucket')
+  web_hook.source_identifier = 'bitbucket'
+
+  web_hook.web_hook_alias_keys.destroy_all
+  name_alias = web_hook.web_hook_alias_keys.build
+  name_alias.alias_key = 'actor.display_name'
+  name_alias.alias_type = Alias::AliasType::NAME
+
+  username_alias = web_hook.web_hook_alias_keys.build
+  username_alias.alias_key = 'actor.username'
+  username_alias.alias_type = Alias::AliasType::USERNAME
+
+  web_hook.web_hook_rules.destroy_all
+  rule = web_hook.web_hook_rules.build
+  rule.name = 'Repository Push'
+
+  rule.web_hook_predicates.destroy_all
+  predicate = KeyPresentPredicate.new(web_hook_rule: rule, key_path: 'push')
+  rule.web_hook_predicates << predicate
+
+  rule.web_hook_consequents.destroy_all
+  consequent = rule.web_hook_consequents.build
+  consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_REPOSITORY_PUSH
+
+  web_hook.save!
+
+  #=======================================
+
 end
