@@ -20,7 +20,6 @@
 
 FactoryGirl.define do
   factory :web_hook_predicate do
-    key_path 'result'
     web_hook_rule
   end
 end

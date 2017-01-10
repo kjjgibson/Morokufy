@@ -4,7 +4,6 @@
 #
 #  id               :integer          not null, primary key
 #  web_hook_rule_id :integer
-#  key_path         :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  actable_id       :integer
@@ -35,22 +34,6 @@ class WebHookPredicate < ApplicationRecord
   # * +params+ - A hash of params in which to search
   def is_true?(request, params)
     raise NotImplementedError
-  end
-
-  # Get the value for a json key path
-  #
-  # === Parameters
-  #
-  # * +params+ - A hash of params in which to search
-  def value_for_key_path(params)
-    keys = key_path.split('.')
-    value = params
-    keys.each do |key|
-      value = value[key.to_sym]
-      break unless value
-    end
-
-    return value
   end
 
 end

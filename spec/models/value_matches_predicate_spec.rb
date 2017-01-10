@@ -12,13 +12,13 @@ describe ValueMatchesPredicate, type: :model do
   end
 
   describe '#is_true?' do
-    let(:key_path) { 'result' }
+    let(:path) { 'result' }
     let(:expected_value) { 'pass' }
-    let(:value_matches_predicate) { FactoryGirl.create(:value_matches_predicate, key_path: key_path, expected_value: expected_value) }
+    let(:value_matches_predicate) { FactoryGirl.create(:value_matches_predicate, path: path, expected_value: expected_value) }
 
     context 'key not found' do
       context 'single level key' do
-        let(:key_path) { 'result' }
+        let(:path) { 'result' }
 
         it 'should return false' do
           expect(value_matches_predicate.is_true?(nil, {})).to eq(false)
@@ -26,7 +26,7 @@ describe ValueMatchesPredicate, type: :model do
       end
 
       context 'multi level key' do
-        let(:key_path) { 'build.result' }
+        let(:path) { 'build.result' }
 
         it 'should return false' do
           expect(value_matches_predicate.is_true?(nil, {})).to eq(false)
@@ -36,7 +36,7 @@ describe ValueMatchesPredicate, type: :model do
 
     context 'key found' do
       context 'single level key' do
-        let(:key_path) { 'result' }
+        let(:path) { 'result' }
 
         context 'found value matches expected value' do
           it 'should return true' do
@@ -52,7 +52,7 @@ describe ValueMatchesPredicate, type: :model do
       end
 
       context 'multi level key' do
-        let(:key_path) { 'build.result' }
+        let(:path) { 'build.result' }
 
         context 'found value matches expected value' do
           it 'should return true' do

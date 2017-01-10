@@ -46,45 +46,4 @@ describe WebHookPredicate, type: :model do
     end
   end
 
-  describe '#value_for_key_path' do
-    let(:key_path) { 'result' }
-    let(:web_hook_predicate) { FactoryGirl.create(:web_hook_predicate, key_path: key_path) }
-
-    context 'key not found' do
-      context 'single level key' do
-        let(:key_path) { 'result' }
-
-        it 'should return false' do
-          expect(web_hook_predicate.value_for_key_path({})).to eq(nil)
-        end
-      end
-
-      context 'multi level key' do
-        let(:key_path) { 'build.result' }
-
-        it 'should return false' do
-          expect(web_hook_predicate.value_for_key_path({})).to eq(nil)
-        end
-      end
-    end
-
-    context 'key found' do
-      context 'single level key' do
-        let(:key_path) { 'result' }
-
-        it 'should return the value' do
-          expect(web_hook_predicate.value_for_key_path({ result: 'pass' })).to eq('pass')
-        end
-      end
-
-      context 'multi level key' do
-        let(:key_path) { 'build.result' }
-
-        it 'should return the value' do
-          expect(web_hook_predicate.value_for_key_path({ build: { result: 'pass' } })).to eq('pass')
-        end
-      end
-    end
-  end
-
 end
