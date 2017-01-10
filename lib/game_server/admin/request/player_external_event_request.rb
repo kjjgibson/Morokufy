@@ -19,6 +19,16 @@ module GameServer
           BITBUCKET_PULL_REQUEST_APPROVED = 'BitbucketPullRequestApproved'
           BITBUCKET_PULL_REQUEST_MERGED = 'BitbucketPullRequestMerged'
           BITBUCKET_PULL_REQUEST_COMMENT_CREATED = 'BitbucketPullRequestCommentCreated'
+          JIRA_ISSUE_CREATED = 'JiraIssueCreated'
+          JIRA_ISSUE_UPDATED = 'JiraIssueUpdated'
+          JIRA_WORKLOG_CREATED = 'JiraWorklogCreated'
+          JIRA_COMMENT_CREATED = 'JiraCommentCreated'
+          JIRA_BOARD_CREATED = 'JiraBoardCreated'
+          JIRA_BOARD_UPDATED = 'JiraBoardUpdated'
+          JIRA_SPRINT_CREATED = 'JiraSprintCreated'
+          JIRA_SPRINT_UPDATED = 'JiraSprintUpdated'
+          JIRA_SPRINT_STARTED = 'JiraSprintStarted'
+          JIRA_SPRINT_CLOSED = 'JiraSprintClosed'
         end
 
         def log_event(player_ext_id, external_event_name)

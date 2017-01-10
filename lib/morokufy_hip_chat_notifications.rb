@@ -149,7 +149,7 @@ class MorokufyHipChatNotifications
 
     aliases = player.aliases
     alias_types = aliases.pluck(:alias_type)
-    alias_type_preferences = [Alias::AliasType::NAME, Alias::AliasType::EMAIL, Alias::AliasType::USERNAME]
+    alias_type_preferences = [Alias::AliasType::NAME, Alias::AliasType::DISPLAY_NAME, Alias::AliasType::EMAIL, Alias::AliasType::USERNAME]
 
     alias_type_preferences.each do |alias_type|
       if alias_types.include?(alias_type)

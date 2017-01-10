@@ -139,4 +139,37 @@ WebHook.transaction do
   web_hook.save!
   #=======================================
 
+  #============== JIRA ==============
+  web_hook = WebHook.find_or_initialize_by(name: 'Jira')
+  web_hook.source_identifier = 'jira'
+
+  web_hook.web_hook_alias_keys.destroy_all
+  name_alias = web_hook.web_hook_alias_keys.build
+  name_alias.alias_key = 'user.name'
+  name_alias.alias_type = Alias::AliasType::NAME
+
+  email_alias = web_hook.web_hook_alias_keys.build
+  email_alias.alias_key = 'user.emailAddress'
+  email_alias.alias_type = Alias::AliasType::EMAIL
+
+  display_name_alias = web_hook.web_hook_alias_keys.build
+  display_name_alias.alias_key = 'user.display_name'
+  display_name_alias.alias_type = Alias::AliasType::DISPLAY_NAME
+
+  web_hook.web_hook_rules.destroy_all
+  #===== Repo Push Rule
+  rule = web_hook.web_hook_rules.build
+  rule.name = 'Repository Push'
+
+  rule.web_hook_predicates.destroy_all
+  predicate = ValueMatchesPredicate.new(web_hook_rule: rule, key_path: 'webhookEvent', expected_value: 'jira:issue_created')
+  rule.web_hook_predicates << predicate
+
+  rule.web_hook_consequents.destroy_all
+  consequent = rule.web_hook_consequents.build
+  consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::JIRA_ISSUE_CREATED
+
+
+  ArrayValueMatchesPredicate.new(web_hook_rule:rule, key_path: 'changelog.items.field', expected_value: 'description') # any of the items matches
+  #=======================================
 end
