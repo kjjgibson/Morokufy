@@ -28,8 +28,8 @@ WebHook.transaction do
   rule.name = 'Post Build Success'
 
   rule.web_hook_predicates.destroy_all
-  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'result', expected_value: 'passed')
-  rule.web_hook_predicates << predicate
+  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, path: 'result', expected_values: ['passed'])
+  rule.web_hook_predicates << predicate.acting_as
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
@@ -40,8 +40,8 @@ WebHook.transaction do
   rule.name = 'Post Build Failed'
 
   rule.web_hook_predicates.destroy_all
-  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'result', expected_value: 'failed')
-  rule.web_hook_predicates << predicate
+  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, path: 'result', expected_values: ['failed'])
+  rule.web_hook_predicates << predicate.acting_as
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
@@ -70,7 +70,7 @@ WebHook.transaction do
 
   rule.web_hook_predicates.destroy_all
   predicate = HeaderMatchesPredicate.new(web_hook_rule: rule, header: 'X-Event-Key', expected_value: 'repo:push')
-  rule.web_hook_predicates << predicate
+  rule.web_hook_predicates << predicate.acting_as
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
@@ -82,7 +82,7 @@ WebHook.transaction do
 
   rule.web_hook_predicates.destroy_all
   predicate = HeaderMatchesPredicate.new(web_hook_rule: rule, header: 'X-Event-Key', expected_value: 'pullrequest:created')
-  rule.web_hook_predicates << predicate
+  rule.web_hook_predicates << predicate.acting_as
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
@@ -106,7 +106,7 @@ WebHook.transaction do
 
   rule.web_hook_predicates.destroy_all
   predicate = HeaderMatchesPredicate.new(web_hook_rule: rule, header: 'X-Event-Key', expected_value: 'pullrequest:approved')
-  rule.web_hook_predicates << predicate
+  rule.web_hook_predicates << predicate.acting_as
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
@@ -118,7 +118,7 @@ WebHook.transaction do
 
   rule.web_hook_predicates.destroy_all
   predicate = HeaderMatchesPredicate.new(web_hook_rule: rule, header: 'X-Event-Key', expected_value: 'pullrequest:fulfilled')
-  rule.web_hook_predicates << predicate
+  rule.web_hook_predicates << predicate.acting_as
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
@@ -130,7 +130,7 @@ WebHook.transaction do
 
   rule.web_hook_predicates.destroy_all
   predicate = HeaderMatchesPredicate.new(web_hook_rule: rule, header: 'X-Event-Key', expected_value: 'pullrequest:comment_created')
-  rule.web_hook_predicates << predicate
+  rule.web_hook_predicates << predicate.acting_as
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
@@ -162,8 +162,8 @@ WebHook.transaction do
   rule.name = 'Issue Created'
 
   rule.web_hook_predicates.destroy_all
-  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'webhookEvent', expected_value: 'jira:issue_created')
-  rule.web_hook_predicates << predicate
+  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, path: 'webhookEvent', expected_values: ['jira:issue_created'])
+  rule.web_hook_predicates << predicate.acting_as
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
@@ -175,8 +175,8 @@ WebHook.transaction do
   rule.name = 'Issue Created'
 
   rule.web_hook_predicates.destroy_all
-  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'webhookEvent', expected_value: 'jira:issue_updated')
-  rule.web_hook_predicates << predicate
+  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, path: 'webhookEvent', expected_values: ['jira:issue_updated'])
+  rule.web_hook_predicates << predicate.acting_as
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
@@ -187,8 +187,8 @@ WebHook.transaction do
   rule.name = 'Worklog Updated'
 
   rule.web_hook_predicates.destroy_all
-  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'webhookEvent', expected_value: 'worklog_created')
-  rule.web_hook_predicates << predicate
+  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, path: 'webhookEvent', expected_values: ['worklog_created'])
+  rule.web_hook_predicates << predicate.acting_as
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
@@ -199,8 +199,8 @@ WebHook.transaction do
   rule.name = 'Issue Comment Created'
 
   rule.web_hook_predicates.destroy_all
-  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'webhookEvent', expected_value: 'comment_created')
-  rule.web_hook_predicates << predicate
+  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, path: 'webhookEvent', expected_values: ['comment_created'])
+  rule.web_hook_predicates << predicate.acting_as
 
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
