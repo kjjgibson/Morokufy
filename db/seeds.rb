@@ -205,5 +205,7 @@ WebHook.transaction do
   rule.web_hook_consequents.destroy_all
   consequent = rule.web_hook_consequents.build
   consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::JIRA_COMMENT_CREATED
+
+  web_hook.save!
   #=======================================
 end
