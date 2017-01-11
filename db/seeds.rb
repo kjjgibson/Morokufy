@@ -157,9 +157,9 @@ WebHook.transaction do
   display_name_alias.alias_type = Alias::AliasType::DISPLAY_NAME
 
   web_hook.web_hook_rules.destroy_all
-  #===== Repo Push Rule
+  #===== Issue Created Rule
   rule = web_hook.web_hook_rules.build
-  rule.name = 'Repository Push'
+  rule.name = 'Issue Created'
 
   rule.web_hook_predicates.destroy_all
   predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'webhookEvent', expected_value: 'jira:issue_created')
@@ -169,7 +169,41 @@ WebHook.transaction do
   consequent = rule.web_hook_consequents.build
   consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::JIRA_ISSUE_CREATED
 
+  #===== Issue Updated Rule
+  #TODO: different events based on what exactly is updated
+  rule = web_hook.web_hook_rules.build
+  rule.name = 'Issue Created'
 
-  # ArrayValueMatchesPredicate.new(web_hook_rule:rule, key_path: 'changelog.items.field', expected_value: 'description') # any of the items matches
+  rule.web_hook_predicates.destroy_all
+  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'webhookEvent', expected_value: 'jira:issue_updated')
+  rule.web_hook_predicates << predicate
+
+  rule.web_hook_consequents.destroy_all
+  consequent = rule.web_hook_consequents.build
+  consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::JIRA_ISSUE_UPDATED
+
+  #===== Worklog Created Rule
+  rule = web_hook.web_hook_rules.build
+  rule.name = 'Worklog Updated'
+
+  rule.web_hook_predicates.destroy_all
+  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'webhookEvent', expected_value: 'worklog_created')
+  rule.web_hook_predicates << predicate
+
+  rule.web_hook_consequents.destroy_all
+  consequent = rule.web_hook_consequents.build
+  consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::JIRA_WORKLOG_CREATED
+
+  #===== Issue Comment Created Rule
+  rule = web_hook.web_hook_rules.build
+  rule.name = 'Issue Comment Created'
+
+  rule.web_hook_predicates.destroy_all
+  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'webhookEvent', expected_value: 'comment_created')
+  rule.web_hook_predicates << predicate
+
+  rule.web_hook_consequents.destroy_all
+  consequent = rule.web_hook_consequents.build
+  consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::JIRA_COMMENT_CREATED
   #=======================================
 end

@@ -92,4 +92,16 @@ Rule.transaction do
   r = create_event_created_rule('Bitbucket Comment Created', 'BitbucketPullRequestCommentCreated')
   create_points_consequents(r, [{ name: 'Points', count: 2 }, { name: 'Exp', count: 20 }])
   #=======================================
+
+  #============== Jira ==============
+  r = create_event_created_rule('Jira Issue Created', 'JiraIssueCreated')
+  create_points_consequents(r, [{ name: 'Points', count: 5 }, { name: 'Exp', count: 50 }])
+  r = create_event_created_rule('Jira Issue Updated', 'JiraIssueUpdated')
+  create_points_consequents(r, [{ name: 'Points', count: 1 }, { name: 'Exp', count: 10 }])
+  r = create_event_created_rule('Jira Worklog Created', 'JiraWorklogCreated')
+  create_points_consequents(r, [{ name: 'Points', count: 10 }, { name: 'Exp', count: 100 }])
+  r = create_event_created_rule('Jira Comment Created', 'JiraCommentCreated')
+  create_points_consequents(r, [{ name: 'Points', count: 1 }, { name: 'Exp', count: 10 }])
+  #=======================================
+
 end
