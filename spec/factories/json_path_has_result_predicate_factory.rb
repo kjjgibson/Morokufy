@@ -1,7 +1,6 @@
 FactoryGirl.define do
-  factory :value_matches_predicate do
+  factory :json_path_has_result_predicate do
     path 'key'
-    expected_value 'value'
     web_hook_rule
   end
 end

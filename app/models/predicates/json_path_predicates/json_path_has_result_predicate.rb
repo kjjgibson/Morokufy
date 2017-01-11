@@ -1,11 +1,11 @@
 # == Schema Information
 #
-# Table name: key_present_predicates
+# Table name: json_path_has_result_predicates
 #
 #  id :integer          not null, primary key
 #
 
-class KeyPresentPredicate < ApplicationRecord
+class JsonPathHasResultPredicate < ApplicationRecord
 
   acts_as :json_path_predicate, as: :jpp_actable, dependent: :destroy
 

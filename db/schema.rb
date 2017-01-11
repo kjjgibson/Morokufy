@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170110065315) do
+ActiveRecord::Schema.define(version: 20170111064642) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,13 +28,25 @@ ActiveRecord::Schema.define(version: 20170110065315) do
     t.string "expected_value"
   end
 
+  create_table "json_path_has_result_predicates", force: :cascade do |t|
+  end
+
   create_table "json_path_predicates", force: :cascade do |t|
     t.string  "path"
     t.integer "jpp_actable_id"
     t.string  "jpp_actable_type"
   end
 
-  create_table "key_present_predicates", force: :cascade do |t|
+  create_table "json_path_result_includes_all_predicates", force: :cascade do |t|
+    t.string "expected_values"
+  end
+
+  create_table "json_path_result_includes_any_predicates", force: :cascade do |t|
+    t.string "expected_values"
+  end
+
+  create_table "json_path_result_matches_predicates", force: :cascade do |t|
+    t.string "expected_values"
   end
 
   create_table "players", force: :cascade do |t|
@@ -53,10 +65,6 @@ ActiveRecord::Schema.define(version: 20170110065315) do
     t.string   "event_name"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
-  end
-
-  create_table "value_matches_predicates", force: :cascade do |t|
-    t.string "expected_value"
   end
 
   create_table "web_hook_alias_keys", force: :cascade do |t|

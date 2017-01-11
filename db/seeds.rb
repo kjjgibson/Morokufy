@@ -28,7 +28,7 @@ WebHook.transaction do
   rule.name = 'Post Build Success'
 
   rule.web_hook_predicates.destroy_all
-  predicate = ValueMatchesPredicate.new(web_hook_rule: rule, key_path: 'result', expected_value: 'passed')
+  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'result', expected_value: 'passed')
   rule.web_hook_predicates << predicate
 
   rule.web_hook_consequents.destroy_all
@@ -40,7 +40,7 @@ WebHook.transaction do
   rule.name = 'Post Build Failed'
 
   rule.web_hook_predicates.destroy_all
-  predicate = ValueMatchesPredicate.new(web_hook_rule: rule, key_path: 'result', expected_value: 'failed')
+  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'result', expected_value: 'failed')
   rule.web_hook_predicates << predicate
 
   rule.web_hook_consequents.destroy_all
@@ -162,7 +162,7 @@ WebHook.transaction do
   rule.name = 'Repository Push'
 
   rule.web_hook_predicates.destroy_all
-  predicate = ValueMatchesPredicate.new(web_hook_rule: rule, key_path: 'webhookEvent', expected_value: 'jira:issue_created')
+  predicate = JsonPathResultMatchesPredicate.new(web_hook_rule: rule, key_path: 'webhookEvent', expected_value: 'jira:issue_created')
   rule.web_hook_predicates << predicate
 
   rule.web_hook_consequents.destroy_all
@@ -170,6 +170,6 @@ WebHook.transaction do
   consequent.event_name = GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::JIRA_ISSUE_CREATED
 
 
-  ArrayValueMatchesPredicate.new(web_hook_rule:rule, key_path: 'changelog.items.field', expected_value: 'description') # any of the items matches
+  # ArrayValueMatchesPredicate.new(web_hook_rule:rule, key_path: 'changelog.items.field', expected_value: 'description') # any of the items matches
   #=======================================
 end
