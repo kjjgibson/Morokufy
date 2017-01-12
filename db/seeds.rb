@@ -103,4 +103,20 @@ WebHook.transaction do
   JsonPathResultMatchesPredicate.create(web_hook_rule: rule, path: 'issue_event_type_name', expected_values: ['issue_commented'])
   rule.web_hook_consequents.create(event_name: GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::JIRA_COMMENT_CREATED)
   #=======================================
+
+  #============== HEROKU DEPLOY HOOKS ==============
+  web_hook = WebHook.find_or_initialize_by(name: 'Heroku Deploy Hooks')
+  web_hook.update_attributes!(source_identifier: 'heroku_deploy_hooks')
+
+  web_hook.web_hook_alias_keys.destroy_all
+  web_hook.web_hook_rules.destroy_all
+
+  web_hook.web_hook_alias_keys.create(alias_key: 'user', alias_type: Alias::AliasType::EMAIL)
+
+  #===== Deploy Rule
+  rule = web_hook.web_hook_rules.create(name: 'Deploy')
+  TruePredicate.create(web_hook_rule: rule)
+  rule.web_hook_consequents.create(event_name: GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::HEROKU_DEPLOY)
+  #=======================================
+
 end

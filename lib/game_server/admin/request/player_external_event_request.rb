@@ -29,6 +29,7 @@ module GameServer
           JIRA_SPRINT_UPDATED = 'JiraSprintUpdated'
           JIRA_SPRINT_STARTED = 'JiraSprintStarted'
           JIRA_SPRINT_CLOSED = 'JiraSprintClosed'
+          HEROKU_DEPLOY = 'HerokuDeploy'
         end
 
         def log_event(player_ext_id, external_event_name)

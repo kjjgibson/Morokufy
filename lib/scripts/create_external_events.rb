@@ -23,4 +23,5 @@ ExternalEvent.transaction do
   build_external_event('JiraSprintUpdated', 'Jira sprint updated')
   build_external_event('JiraSprintStarted', 'Jira sprint started')
   build_external_event('JiraSprintClosed', 'Jira sprint closed')
+  build_external_event('HerokuDeploy', 'Deployed to a Heroku App')
 end

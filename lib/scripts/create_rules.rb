@@ -104,4 +104,9 @@ Rule.transaction do
   create_points_consequents(r, [{ name: 'Points', count: 1 }, { name: 'Exp', count: 10 }])
   #=======================================
 
+  #============== Heroku Deploy Hooks ====
+  r = create_event_created_rule('Heroku Deploy', 'HerokuDeploy')
+  create_points_consequents(r, [{ name: 'Points', count: 25 }, { name: 'Exp', count: 250 }])
+  #=======================================
+
 end

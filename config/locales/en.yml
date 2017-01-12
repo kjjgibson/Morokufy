@@ -40,3 +40,4 @@ en:
       JiraSprintUpdated: for updating a Sprint in Jira
       JiraSprintStarted: for starting a Sprint in Jira
       JiraSprintClosed: for finishing a Sprint in Jira
+      HerokuDeploy: for deploying to a Heroku app
