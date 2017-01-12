@@ -13,17 +13,19 @@ module Hipchat
       end
 
       response = {
-          notify: true,
+          notify: false,
           message_format: 'text',
           from: 'Morokufy'
       }
-
+      message = ""
       if player.present?
         gs_player = get_game_server_player(player)
-        response[:message] = gs_player.player_point_types.find{ |f| f.point_name == point_type}.count
+        message = gs_player.player_point_types.find{ |f| f.point_name == point_type}.count.to_s
       else
-        response[:message] = 'Player could not be found'
+        message = 'Player could not be found'
       end
+
+      response[:message] = message
       puts response
       render json: response
 
