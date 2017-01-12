@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170112060337) do
+ActiveRecord::Schema.define(version: 20170112065937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,8 @@ ActiveRecord::Schema.define(version: 20170112060337) do
     t.string   "header"
     t.string   "expected_values"
     t.string   "path"
+    t.integer  "predicate1_id"
+    t.integer  "predicate2_id"
     t.index ["web_hook_rule_id"], name: "index_web_hook_predicates_on_web_hook_rule_id", using: :btree
   end
 

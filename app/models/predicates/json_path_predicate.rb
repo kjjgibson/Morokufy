@@ -10,6 +10,8 @@
 #  header           :string
 #  expected_values  :string
 #  path             :string
+#  predicate1_id    :integer
+#  predicate2_id    :integer
 #
 # Indexes
 #

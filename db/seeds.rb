@@ -100,7 +100,7 @@ WebHook.transaction do
 
   #===== Issue Comment Created Rule
   rule = web_hook.web_hook_rules.create(name: 'Issue Comment Created')
-  JsonPathResultMatchesPredicate.create(web_hook_rule: rule, path: 'webhookEvent', expected_values: ['comment_created'])
+  JsonPathResultMatchesPredicate.create(web_hook_rule: rule, path: 'issue_event_type_name', expected_values: ['issue_commented'])
   rule.web_hook_consequents.create(event_name: GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::JIRA_COMMENT_CREATED)
   #=======================================
 end

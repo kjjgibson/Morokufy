@@ -22,18 +22,21 @@
 #  fk_rails_9ae6b82655  (web_hook_rule_id => web_hook_rules.id)
 #
 
-class JsonPathResultIncludesAnyPredicate < JsonPathPredicate
+class AndPredicate < WebHookPredicate
 
-  validates_presence_of :expected_values
+  has_one :predicate1, class_name: 'WebHookPredicate', foreign_key: 'predicate1_id'
+  has_one :predicate2, class_name: 'WebHookPredicate', foreign_key: 'predicate2_id'
 
-  # Return true if the JSONPath expression result includes any of the expected values
+  validates_presence_of :predicate1, :predicate2
+
+  # Return true if both predicates are true
   #
   # === Parameters
   #
   # * +request+ - The HTTP Request object for the webhook
   # * +params+ - A hash of params in which to search
   def is_true?(request, params)
-    return (evaluate_path(params) & expected_values).any?
+    return predicate1.is_true?(request, params) && predicate2.is_true?(request, params)
   end
 
 end
