@@ -4,4 +4,8 @@ Rails.application.routes.draw do
     resources :semaphore_web_hooks, only: %i(create)
   end
 
+  namespace :hipchat do
+    resources :hipchat_slash, only: %i(create)
+  end
+
 end
