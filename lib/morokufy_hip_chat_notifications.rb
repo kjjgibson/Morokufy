@@ -110,30 +110,8 @@ class MorokufyHipChatNotifications
   # === Parameters
   #
   # * +event+ - The EventType that caused the Player to be awarded with whatever it was
-  #TOOD: use localization to remove this entire case statement
   private def reason_for_event(event)
-    case event
-      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_FAILED_EVENT
-        reason = 'for a failed Semaphore build.'
-      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT
-        reason = 'for a successful Semaphore build.'
-      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_REPOSITORY_PUSH
-        reason = 'for a push to a Bitbucket repository'
-      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_PULL_REQUEST_CREATED
-        reason = 'for creating a Pull Request'
-      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_PULL_REQUEST_UPDATED
-        reason = 'for updating a Pull Request'
-      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_PULL_REQUEST_APPROVED
-        reason = 'for approving a Pull Request'
-      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_PULL_REQUEST_MERGED
-        reason = 'for merging a Pull Request'
-      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::BITBUCKET_PULL_REQUEST_COMMENT_CREATED
-        reason = 'for commenting on a Pull Request'
-      else
-        reason = ''
-    end
-
-    return reason
+    return I18n.t("lib.event_reason.#{event}", default: '')
   end
 
   # Return the most sensible Alias value that belongs to a Player in order to be used in the Hip Chat message
