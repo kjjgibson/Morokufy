@@ -19,7 +19,8 @@ module Hipchat
       }
 
       if player.present?
-        response[:message] = player.player_point_types.find{ |f| f.point_name == point_type}.count
+        gs_player = get_game_server_player(player)
+        response[:message] = gs_player.player_point_types.find{ |f| f.point_name == point_type}.count
       else
         response[:message] = 'Player could not be found'
       end
