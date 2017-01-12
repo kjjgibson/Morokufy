@@ -3,7 +3,7 @@ module Hipchat
 
     def create
       player_alias = params[:item][:message][:from][:name]
-      player = create_or_get_player(Alias.new(alias_value: player_alias, alias_type: Alias::AliasType::NAME))
+      player = create_or_get_player([Alias.new(alias_value: player_alias, alias_type: Alias::AliasType::NAME)])
 
       command = params[:item][:message][:message].gsub('/stats ', '')
 
