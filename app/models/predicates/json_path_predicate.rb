@@ -1,17 +1,26 @@
 # == Schema Information
 #
-# Table name: json_path_predicates
+# Table name: web_hook_predicates
 #
 #  id               :integer          not null, primary key
+#  web_hook_rule_id :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  type             :string
+#  header           :string
+#  expected_values  :string
 #  path             :string
-#  jpp_actable_id   :integer
-#  jpp_actable_type :string
+#
+# Indexes
+#
+#  index_web_hook_predicates_on_web_hook_rule_id  (web_hook_rule_id)
+#
+# Foreign Keys
+#
+#  fk_rails_9ae6b82655  (web_hook_rule_id => web_hook_rules.id)
 #
 
-class JsonPathPredicate < ApplicationRecord
-
-  acts_as :web_hook_predicate, dependent: :destroy
-  actable as: :jpp_actable
+class JsonPathPredicate < WebHookPredicate
 
   validates_presence_of :path
 

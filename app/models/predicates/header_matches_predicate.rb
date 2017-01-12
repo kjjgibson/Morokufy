@@ -1,17 +1,28 @@
 # == Schema Information
 #
-# Table name: header_matches_predicates
+# Table name: web_hook_predicates
 #
-#  id             :integer          not null, primary key
-#  header         :string
-#  expected_value :string
+#  id               :integer          not null, primary key
+#  web_hook_rule_id :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  type             :string
+#  header           :string
+#  expected_values  :string
+#  path             :string
+#
+# Indexes
+#
+#  index_web_hook_predicates_on_web_hook_rule_id  (web_hook_rule_id)
+#
+# Foreign Keys
+#
+#  fk_rails_9ae6b82655  (web_hook_rule_id => web_hook_rules.id)
 #
 
-class HeaderMatchesPredicate < ApplicationRecord
+class HeaderMatchesPredicate < WebHookPredicate
 
-  acts_as :web_hook_predicate
-
-  validates_presence_of :header, :expected_value
+  validates_presence_of :header, :expected_values
 
   # Return true if the HTTP header of the request has the expected value
   #
@@ -20,7 +31,7 @@ class HeaderMatchesPredicate < ApplicationRecord
   # * +request+ - The HTTP Request object for the webhook
   # * +params+ - A hash of params in which to search
   def is_true?(request, params)
-    return request.headers[header] == expected_value
+    return request.headers[header] == expected_values[0]
   end
 
 end

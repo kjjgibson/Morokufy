@@ -36,7 +36,7 @@ class WebHookRule < ApplicationRecord
     result = true
 
     web_hook_predicates.each do |predicate|
-      unless predicate.specific.is_true?(request, params)
+      unless predicate.is_true?(request, params)
         result = false
         #If we've found a predicate that evaluates to false there's no point in continuing
         break

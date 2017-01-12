@@ -6,8 +6,10 @@
 #  web_hook_rule_id :integer
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  actable_id       :integer
-#  actable_type     :string
+#  type             :string
+#  header           :string
+#  expected_values  :string
+#  path             :string
 #
 # Indexes
 #
@@ -20,8 +22,9 @@
 
 class WebHookPredicate < ApplicationRecord
 
-  actable
   belongs_to :web_hook_rule
+
+  serialize :expected_values, Array
 
   validates_presence_of :web_hook_rule
 

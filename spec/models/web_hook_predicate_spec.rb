@@ -29,7 +29,6 @@ describe WebHookPredicate, type: :model do
 
   describe 'associations' do
     it { should belong_to :web_hook_rule }
-    it { expect(WebHookPredicate).to be_actable }
   end
 
   describe 'validations' do

@@ -1,16 +1,26 @@
 # == Schema Information
 #
-# Table name: json_path_result_matches_predicates
+# Table name: web_hook_predicates
 #
-#  id              :integer          not null, primary key
-#  expected_values :string
+#  id               :integer          not null, primary key
+#  web_hook_rule_id :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  type             :string
+#  header           :string
+#  expected_values  :string
+#  path             :string
+#
+# Indexes
+#
+#  index_web_hook_predicates_on_web_hook_rule_id  (web_hook_rule_id)
+#
+# Foreign Keys
+#
+#  fk_rails_9ae6b82655  (web_hook_rule_id => web_hook_rules.id)
 #
 
-class JsonPathResultMatchesPredicate < ApplicationRecord
-
-  acts_as :json_path_predicate, as: :jpp_actable, dependent: :destroy
-
-  serialize :expected_values, Array
+class JsonPathResultMatchesPredicate < JsonPathPredicate
 
   validates_presence_of :expected_values
 

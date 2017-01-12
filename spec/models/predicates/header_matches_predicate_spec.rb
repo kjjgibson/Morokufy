@@ -9,13 +9,13 @@ describe HeaderMatchesPredicate, type: :model do
 
   describe 'validations' do
     it { should validate_presence_of :header }
-    it { should validate_presence_of :expected_value }
+    it { should validate_presence_of :expected_values }
   end
 
   describe '#is_true?' do
     let(:header) { 'X-Event-Key' }
-    let(:expected_value) { 'repo:push' }
-    let(:header_matches_predicate) { FactoryGirl.create(:header_matches_predicate, header: header, expected_value: expected_value) }
+    let(:expected_values) { ['repo:push'] }
+    let(:header_matches_predicate) { FactoryGirl.create(:header_matches_predicate, header: header, expected_values: expected_values) }
     let(:request) { double('request') }
     let(:headers) { {} }
 
@@ -33,7 +33,7 @@ describe HeaderMatchesPredicate, type: :model do
 
     context 'header found' do
       context 'found header matches expected value' do
-        let(:headers) { { 'X-Event-Key' => expected_value } }
+        let(:headers) { { 'X-Event-Key' => expected_values[0] } }
 
         it 'should return true' do
           expect(header_matches_predicate.is_true?(request, nil)).to eq(true)
@@ -41,7 +41,7 @@ describe HeaderMatchesPredicate, type: :model do
       end
 
       context 'found header does not match expected value' do
-        let(:headers) { { 'X-Event-Key' => 'unexpected_value' } }
+        let(:headers) { { 'X-Event-Key' => 'unexpected_values' } }
 
         it 'should return false' do
           expect(header_matches_predicate.is_true?(request, nil)).to eq(false)

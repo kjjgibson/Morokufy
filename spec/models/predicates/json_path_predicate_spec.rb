@@ -11,10 +11,6 @@ describe JsonPathPredicate, type: :model do
     it { should validate_presence_of(:path) }
   end
 
-  describe 'associations' do
-    it { expect(JsonPathPredicate).to be_actable }
-  end
-
   describe '#evaluate_path' do
     let(:path) { 'result' }
     let(:json_path_predicate) { FactoryGirl.create(:json_path_predicate, path: path) }
