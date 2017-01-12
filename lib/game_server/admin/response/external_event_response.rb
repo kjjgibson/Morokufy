@@ -1,6 +1,6 @@
 require 'game_server/game_server_response'
 
-# A response from a GameServer::Admin::Request::ExternalEventRequest request
+# A response from a GameServer::Admin::Request::PlayerExternalEventRequest request
 # This class holds any potential points or achievements that may have been awarded due to an Event being logged
 
 module GameServer

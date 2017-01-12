@@ -6,24 +6,41 @@ require 'game_server/model/rule_result_achievement_award'
 module GameServer
   module Admin
     module Request
-      class ExternalEventRequest < GameServer::Admin::Request::AdminRequest
+      class PlayerExternalEventRequest < GameServer::Admin::Request::AdminRequest
 
-        PATH = '/external_events'
+        PATH = '/player_external_events'
 
         module EventTypes
           SEMAPHORE_BUILD_FAILED_EVENT = 'SemaphoreBuildFailed'
           SEMAPHORE_BUILD_PASSED_EVENT = 'SemaphoreBuildPassed'
+          BITBUCKET_REPOSITORY_PUSH = 'BitbucketRepositoryPush'
+          BITBUCKET_PULL_REQUEST_CREATED = 'BitbucketPullRequestCreated'
+          BITBUCKET_PULL_REQUEST_UPDATED = 'BitbucketPullRequestUpdated'
+          BITBUCKET_PULL_REQUEST_APPROVED = 'BitbucketPullRequestApproved'
+          BITBUCKET_PULL_REQUEST_MERGED = 'BitbucketPullRequestMerged'
+          BITBUCKET_PULL_REQUEST_COMMENT_CREATED = 'BitbucketPullRequestCommentCreated'
+          JIRA_ISSUE_CREATED = 'JiraIssueCreated'
+          JIRA_ISSUE_UPDATED = 'JiraIssueUpdated'
+          JIRA_WORKLOG_CREATED = 'JiraWorklogCreated'
+          JIRA_COMMENT_CREATED = 'JiraCommentCreated'
+          JIRA_BOARD_CREATED = 'JiraBoardCreated'
+          JIRA_BOARD_UPDATED = 'JiraBoardUpdated'
+          JIRA_SPRINT_CREATED = 'JiraSprintCreated'
+          JIRA_SPRINT_UPDATED = 'JiraSprintUpdated'
+          JIRA_SPRINT_STARTED = 'JiraSprintStarted'
+          JIRA_SPRINT_CLOSED = 'JiraSprintClosed'
+          HEROKU_DEPLOY = 'HerokuDeploy'
         end
 
         def log_event(player_ext_id, external_event_name)
           body = { player: player_ext_id, external_event_id: external_event_name }
-          response = post("#{PATH}/log_event", body, headers: { 'API-VERSION': 'v2' })
+          response = post(PATH, body)
 
           response_body = JSON.parse(response.body, symbolize_names: true)
 
           if response.success?
-            points_awards = points_awards(response_body[:rule_results][:points_awarded])
-            achievement_awards = achievement_awards(response_body[:rule_results][:achievements_awarded])
+            points_awards = points_awards(response_body[:points_awarded])
+            achievement_awards = achievement_awards(response_body[:achievements_awarded])
 
             external_event_response = GameServer::Admin::Response::ExternalEventResponse.new(true, nil, points_awards, achievement_awards)
           else

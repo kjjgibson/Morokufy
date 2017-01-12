@@ -20,4 +20,24 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  lib:
+    event_reason:
+      SemaphoreBuildFailed: for a failed Semaphore build
+      SemaphoreBuildPassed: for a successful Semaphore build
+      BitbucketRepositoryPush: for a push to a Bitbucket repository
+      BitbucketPullRequestCreated: for creating a Pull Request
+      BitbucketPullRequestUpdated: for updating a Pull Request
+      BitbucketPullRequestApproved: for approving a Pull Request
+      BitbucketPullRequestMerged: for merging a Pull Request
+      BitbucketPullRequestCommentCreated: for commenting on a Pull Request
+      JiraIssueCreated: for creating a Jira issue
+      JiraIssueUpdated: for updating a Jira issue
+      JiraWorklogCreated: for Logging time in Jira
+      JiraCommentCreated: for commenting on a Jira issue
+      JiraBoardCreated: for creating a new Jira board
+      JiraBoardUpdated: for updating a Jira board
+      JiraSprintCreated: for creating a new Sprint in Jira
+      JiraSprintUpdated: for updating a Sprint in Jira
+      JiraSprintStarted: for starting a Sprint in Jira
+      JiraSprintClosed: for finishing a Sprint in Jira
+      HerokuDeploy: for deploying to a Heroku app
