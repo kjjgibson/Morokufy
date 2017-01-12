@@ -21,12 +21,11 @@ describe 'AdminRequest' do
   end
 
   describe '#get' do
-    let(:body) { { } }
     let(:resource_id) { 10 }
     let(:resource_request_path) { "#{request_path}/#{resource_id}" }
 
     before do
-      expect(GameServer::AuthenticationHelper).to receive(:admin_gs_headers).with(body.to_json, URI.parse('/morokufy/admin/giraffes/10'), 'GET').and_return(mock_headers)
+      expect(GameServer::AuthenticationHelper).to receive(:admin_gs_headers).with('', URI.parse('/morokufy/admin/giraffes/10'), 'GET').and_return(mock_headers)
     end
 
     it 'should call the get method on HTTParty' do

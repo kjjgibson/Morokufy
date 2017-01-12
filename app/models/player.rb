@@ -1,4 +1,5 @@
-require 'game_server/admin/request/external_event_request'
+require 'game_server/admin/request/player_external_event_request'
+require 'game_server/admin/request/achievement_request'
 require 'morokufy_hip_chat_notifications'
 
 # == Schema Information
@@ -37,7 +38,7 @@ class Player < ApplicationRecord
   # * +event_name+ - The name of the ExternalEvent to log
   # * +gs_player+ - The Game Server Player object - used to get the total points and Achievements to display in the Hip Chat message
   def log_event(event_name, gs_player)
-    response = GameServer::Admin::Request::ExternalEventRequest.new().log_event(identifier, event_name)
+    response = GameServer::Admin::Request::PlayerExternalEventRequest.new().log_event(identifier, event_name)
 
     if response.is_success?
       create_rule_consequent_events(response, event_name)
@@ -71,7 +72,7 @@ class Player < ApplicationRecord
     end
   end
 
-  # Send HipChat notifications if points have been awarded
+  # Send HipChat notifications if points or achievements have been awarded
   #
   # === Parameters
   #
@@ -80,13 +81,21 @@ class Player < ApplicationRecord
   private def send_hip_chat_messages(external_event_response, event_name, player, gs_player)
     notifications = MorokufyHipChatNotifications.new()
     points_awarded = external_event_response.points_awarded || []
+    achievements_awarded = external_event_response.achievements_awarded || []
 
     # Update the gs player with any points that were just awarded so that we can display the total point types correctly
     points_awarded.each do |points_award|
       update_gs_player_with_points_award(gs_player, points_award)
     end
 
+    # Send a single HipChat notification for all the points that may have been awarded
     notifications.send_points_awarded_notification(points_awarded, player, gs_player, event_name)
+
+    # For each achievement id that we were awarded, get the details of the Achievement and send a HipChat notification
+    achievements_awarded.each do |achievement_award|
+      achievement_response = GameServer::Admin::Request::AchievementRequest.new().get_achievement(achievement_award.achievement_id)
+      notifications.send_achievement_awarded_notification(achievement_response.achievement, player)
+    end
   end
 
   # Update the GS Player's points with the points that have just been awarded by the latest execution of the rules engine

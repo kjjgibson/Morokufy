@@ -22,7 +22,7 @@ module GameServer
         # @return HTTParty response object
         def get(path, id)
           path = "#{API_PATH}#{path}"
-          return super(path, id, headers: admin_headers(path, {}, 'GET', resource_id: id))
+          return super(path, id, headers: admin_headers(path, '', 'GET', resource_id: id))
         end
 
         # Perform a POST request
@@ -35,7 +35,7 @@ module GameServer
         # @return HTTParty response object
         def post(path, body, headers: {})
           path = "#{API_PATH}#{path}"
-          return super(path, body, headers: admin_headers(path, body, 'POST').merge(headers))
+          return super(path, body, headers: admin_headers(path, body.to_json, 'POST').merge(headers))
         end
 
         # Construct the authentication headers required by the Game Server
@@ -49,7 +49,7 @@ module GameServer
         # @return Hash of headers
         private def admin_headers(path, body, method, resource_id: nil)
           path = request_path(path, resource_id: resource_id)
-          return GameServer::AuthenticationHelper.admin_gs_headers(body.to_json, path, method)
+          return GameServer::AuthenticationHelper.admin_gs_headers(body, path, method)
         end
 
         protected def request_path(path, resource_id: nil)

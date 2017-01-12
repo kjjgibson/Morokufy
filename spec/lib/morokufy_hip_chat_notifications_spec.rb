@@ -1,12 +1,50 @@
 require 'rails_helper'
 require 'morokufy_hip_chat_notifications'
 require 'hip_chat/hip_chat_request'
-require 'game_server/admin/request/external_event_request'
+require 'game_server/admin/request/player_external_event_request'
 require 'game_server/model/player'
 require 'game_server/model/player_point_type'
 require 'game_server/model/rule_result_points_award'
+require 'game_server/model/achievement'
 
 describe 'MorokufyHipChatNotificationsSpec' do
+
+  describe '#send_achievement_awarded_notification' do
+    let(:player_name) { 'Bob' }
+    let(:name_alias) { FactoryGirl.build(:alias, alias_value: player_name, alias_type: Alias::AliasType::NAME) }
+    let(:player) { FactoryGirl.create(:player, aliases: [name_alias]) }
+    let(:achievement) { GameServer::Model::Achievement.new('name', 'description', 'image_url') }
+
+    it 'should send the request' do
+      expect_send_achievement_notification(achievement, player_name)
+
+      MorokufyHipChatNotifications.new().send_achievement_awarded_notification(achievement, player)
+    end
+
+    private def expect_send_achievement_notification(achievement, player_name)
+      expect_any_instance_of(HipChat::HipChatRequest).to receive(:send_room_notification) do |_, room, room_notification|
+        expect(room.room_id).to eq('test_room_id')
+        expect(room.room_auth_token).to eq('test_room_auth_token')
+
+        expect(room_notification.color).to eq('gray')
+        expect(room_notification.message).to eq("#{player_name} unlocked an Achievement!")
+        expect(room_notification.notify).to eq(false)
+
+        card = room_notification.card
+        expect(card).not_to eq(nil)
+        expect(card.title).to eq("#{player_name} unlocked an Achievement!")
+
+        description = card.description
+        expect(description).not_to eq(nil)
+        expect(description.value).to eq("#{player_name} has been awarded the <b>\"#{achievement.name}\"</b> Achievement.\n#{achievement.description}")
+        expect(description.format).to eq('html')
+
+        thumbnail = card.thumbnail
+        expect(thumbnail).not_to eq(nil)
+        expect(thumbnail.url).to eq(achievement.image_url)
+      end
+    end
+  end
 
   describe '#send_points_awarded_notification' do
     let(:name) { 'Bob' }
@@ -35,7 +73,7 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         player = FactoryGirl.create(:player, aliases: [username_alias, email_alias, name_alias])
 
-        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
       end
     end
 
@@ -47,7 +85,7 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         player = FactoryGirl.create(:player, aliases: [username_alias, email_alias])
 
-        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
       end
     end
 
@@ -59,7 +97,7 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         player = FactoryGirl.create(:player, aliases: [username_alias])
 
-        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
       end
     end
 
@@ -71,13 +109,13 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         player = FactoryGirl.create(:player, aliases: [])
 
-        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
+        MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT)
       end
     end
 
     describe 'build_points_awarded_string' do
       let(:player) { FactoryGirl.create(:player, aliases: [name_alias]) }
-      let(:send_points_awarded_notification_action) { MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::ExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT) }
+      let(:send_points_awarded_notification_action) { MorokufyHipChatNotifications.new().send_points_awarded_notification(points_awarded, player, gs_player, GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT) }
 
       context 'award points' do
         context 'single point type' do
