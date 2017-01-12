@@ -19,7 +19,7 @@
 
 FactoryGirl.define do
   factory :web_hook_rule do
-    name { Faker::Hipster.word }
+    name { SecureRandom.uuid }
     web_hook
   end
 end

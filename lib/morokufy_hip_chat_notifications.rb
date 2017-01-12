@@ -111,16 +111,7 @@ class MorokufyHipChatNotifications
   #
   # * +event+ - The EventType that caused the Player to be awarded with whatever it was
   private def reason_for_event(event)
-    case event
-      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_FAILED_EVENT
-        reason = 'for a failed Semaphore build.'
-      when GameServer::Admin::Request::PlayerExternalEventRequest::EventTypes::SEMAPHORE_BUILD_PASSED_EVENT
-        reason = 'for a successful Semaphore build.'
-      else
-        reason = ''
-    end
-
-    return reason
+    return I18n.t("lib.event_reason.#{event}", default: '')
   end
 
   # Return the most sensible Alias value that belongs to a Player in order to be used in the Hip Chat message
@@ -136,7 +127,7 @@ class MorokufyHipChatNotifications
 
     aliases = player.aliases
     alias_types = aliases.pluck(:alias_type)
-    alias_type_preferences = [Alias::AliasType::NAME, Alias::AliasType::EMAIL, Alias::AliasType::USERNAME]
+    alias_type_preferences = [Alias::AliasType::NAME, Alias::AliasType::DISPLAY_NAME, Alias::AliasType::EMAIL, Alias::AliasType::USERNAME]
 
     alias_type_preferences.each do |alias_type|
       if alias_types.include?(alias_type)

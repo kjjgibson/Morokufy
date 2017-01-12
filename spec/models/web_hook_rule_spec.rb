@@ -39,12 +39,13 @@ describe WebHookRule, type: :model do
 
   describe '#evaluate' do
     let(:web_hook_rule) { FactoryGirl.create(:web_hook_rule, web_hook_predicates: web_hook_predicates) }
+    let(:request) { double('request') }
 
     context 'no predicates' do
       let(:web_hook_predicates) { [] }
 
       it 'should return true' do
-        expect(web_hook_rule.evaluate({})).to eq(true)
+        expect(web_hook_rule.evaluate(request, {})).to eq(true)
       end
     end
 
@@ -58,7 +59,7 @@ describe WebHookRule, type: :model do
         end
 
         it 'should return false' do
-          expect(web_hook_rule.evaluate({})).to eq(false)
+          expect(web_hook_rule.evaluate(request, {})).to eq(false)
         end
       end
 
@@ -68,7 +69,7 @@ describe WebHookRule, type: :model do
         end
 
         it 'should return true' do
-          expect(web_hook_rule.evaluate({})).to eq(true)
+          expect(web_hook_rule.evaluate(request, {})).to eq(true)
         end
       end
     end
@@ -85,7 +86,7 @@ describe WebHookRule, type: :model do
         end
 
         it 'should return false' do
-          expect(web_hook_rule.evaluate({})).to eq(false)
+          expect(web_hook_rule.evaluate(request, {})).to eq(false)
         end
       end
 
@@ -96,7 +97,7 @@ describe WebHookRule, type: :model do
         end
 
         it 'should return true' do
-          expect(web_hook_rule.evaluate({})).to eq(true)
+          expect(web_hook_rule.evaluate(request, {})).to eq(true)
         end
       end
     end

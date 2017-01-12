@@ -220,7 +220,7 @@ describe 'MorokufyHipChatNotificationsSpec' do
 
         description = card.description
         expect(description).not_to eq(nil)
-        expect(description.value).to eq("<b>#{selected_alias_value}</b> has been awarded <b>10</b> Points for a successful Semaphore build.")
+        expect(description.value).to eq("<b>#{selected_alias_value}</b> has been awarded <b>10</b> Points for a successful Semaphore build")
         expect(description.format).to eq('html')
 
         icon = card.icon

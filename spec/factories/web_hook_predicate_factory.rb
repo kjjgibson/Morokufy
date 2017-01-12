@@ -20,8 +20,6 @@
 
 FactoryGirl.define do
   factory :web_hook_predicate do
-    web_hook_key 'result'
-    expected_value 'pass'
     web_hook_rule
   end
 end

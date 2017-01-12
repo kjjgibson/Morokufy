@@ -40,6 +40,11 @@ gem 'oj'
 # used instead of net::http ruby lib
 # Httparty supports the use of nested hashes within request body params
 gem 'httparty', '~> 0.13.7'
+# Multi-table inheritance
+gem 'active_record-acts_as', '~> 2.0.5'
+
+# Evaluate json path expressions
+gem 'jsonpath', '~> 0.5.8'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

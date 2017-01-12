@@ -21,7 +21,13 @@ class WebHook < ApplicationRecord
   validates_presence_of :name, :source_identifier
   validates_uniqueness_of :name, :source_identifier
 
-  def run(params)
+  # Run this WebHook by evaluating all rules and executing any consequents
+  #
+  # === Parameters
+  #
+  # * +request+ - The HTTP Request object for the webhook
+  # * +params+ - The params over which to evaluate the predicates
+  def run(request, params)
     aliases = aliases_for_params(params)
 
     if aliases.count > 0
@@ -31,7 +37,7 @@ class WebHook < ApplicationRecord
         game_server_player = get_game_server_player(player)
 
         if game_server_player
-          evaluate_web_hook_rules(params, player, game_server_player)
+          evaluate_web_hook_rules(request, params, player, game_server_player)
         else
           Rails.logger.error('Could not get the Game Server Player - not logging the event either')
         end
@@ -122,16 +128,21 @@ class WebHook < ApplicationRecord
   #
   # === Parameters
   #
+  # * +request+ - The HTTP Request object for the webhook
   # * +params+ - The params over which to evaluate the predicates
   # * +player+ - The Player object used when logging an event
   # * +game_server_player+ - The GameServerPlayer object used when logging an event
-  def evaluate_web_hook_rules(params, player, game_server_player)
+  def evaluate_web_hook_rules(request, params, player, game_server_player)
     web_hook_rules.each do |web_hook_rule|
-      if web_hook_rule.evaluate(params)
+      if web_hook_rule.evaluate(request, params)
+        Rails.logger.info('WebHook rule evaluated to true, executing consequents')
+
         web_hook_rule.web_hook_consequents.each do |consequent|
           event_name = consequent.event_name
           player.log_event(event_name, game_server_player)
         end
+      else
+        Rails.logger.info("WebHook rule evaluated to false")
       end
     end
   end

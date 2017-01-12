@@ -51,11 +51,12 @@ def create_achievement_consequents(rule, achievement_names)
 end
 
 Rule.transaction do
+  #============== Semaphore ==============
   r = create_event_created_rule('Semaphore Failed Build', 'SemaphoreBuildFailed')
-  create_points_consequents(r, [{ name: 'Points', count: -10}])
+  create_points_consequents(r, [{ name: 'Points', count: -10 }])
 
   r = create_event_created_rule('Semaphore Successful Build', 'SemaphoreBuildPassed')
-  create_points_consequents(r, [{ name: 'Points', count: 10}, { name: 'Exp', count: 100}])
+  create_points_consequents(r, [{ name: 'Points', count: 10 }, { name: 'Exp', count: 100 }])
 
   r = create_event_initial_rule('One Successful Semaphore Build', 'SemaphoreBuildPassed', 1)
   create_achievement_consequents(r, ['Does it Work?'])
@@ -75,4 +76,37 @@ Rule.transaction do
   create_achievement_consequents(r, ['It Worked On MY Machine'])
   r = create_event_initial_rule('Five Failed Semaphore Builds', 'SemaphoreBuildFailed', 5)
   create_achievement_consequents(r, ['Testing Your Patience'])
+  #=======================================
+
+  #============== BitBucket ==============
+  r = create_event_created_rule('Bitbucket Repository Push', 'BitbucketRepositoryPush')
+  create_points_consequents(r, [{ name: 'Points', count: 5 }, { name: 'Exp', count: 50 }])
+  r = create_event_created_rule('Bitbucket PR Created', 'BitbucketPullRequestCreated')
+  create_points_consequents(r, [{ name: 'Points', count: 10 }, { name: 'Exp', count: 100 }])
+  r = create_event_created_rule('Bitbucket PR Updated', 'BitbucketPullRequestUpdated')
+  create_points_consequents(r, [{ name: 'Points', count: 1 }, { name: 'Exp', count: 10 }])
+  r = create_event_created_rule('Bitbucket PR Approved', 'BitbucketPullRequestApproved')
+  create_points_consequents(r, [{ name: 'Points', count: 1 }, { name: 'Exp', count: 10 }])
+  r = create_event_created_rule('Bitbucket PR Merged', 'BitbucketPullRequestMerged')
+  create_points_consequents(r, [{ name: 'Points', count: 50 }, { name: 'Exp', count: 500 }])
+  r = create_event_created_rule('Bitbucket Comment Created', 'BitbucketPullRequestCommentCreated')
+  create_points_consequents(r, [{ name: 'Points', count: 2 }, { name: 'Exp', count: 20 }])
+  #=======================================
+
+  #============== Jira ==============
+  r = create_event_created_rule('Jira Issue Created', 'JiraIssueCreated')
+  create_points_consequents(r, [{ name: 'Points', count: 5 }, { name: 'Exp', count: 50 }])
+  r = create_event_created_rule('Jira Issue Updated', 'JiraIssueUpdated')
+  create_points_consequents(r, [{ name: 'Points', count: 1 }, { name: 'Exp', count: 10 }])
+  r = create_event_created_rule('Jira Worklog Created', 'JiraWorklogCreated')
+  create_points_consequents(r, [{ name: 'Points', count: 10 }, { name: 'Exp', count: 100 }])
+  r = create_event_created_rule('Jira Comment Created', 'JiraCommentCreated')
+  create_points_consequents(r, [{ name: 'Points', count: 1 }, { name: 'Exp', count: 10 }])
+  #=======================================
+
+  #============== Heroku Deploy Hooks ====
+  r = create_event_created_rule('Heroku Deploy', 'HerokuDeploy')
+  create_points_consequents(r, [{ name: 'Points', count: 25 }, { name: 'Exp', count: 250 }])
+  #=======================================
+
 end

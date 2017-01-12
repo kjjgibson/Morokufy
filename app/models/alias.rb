@@ -16,6 +16,7 @@ class Alias < ApplicationRecord
     EMAIL = 'email'
     NAME = 'name'
     USERNAME = 'username'
+    DISPLAY_NAME = 'display_name'
   end
 
   validates_presence_of :alias_type, :alias_value

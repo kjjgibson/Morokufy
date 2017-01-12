@@ -4,10 +4,14 @@
 #
 #  id               :integer          not null, primary key
 #  web_hook_rule_id :integer
-#  web_hook_key     :string
-#  expected_value   :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  type             :string
+#  header           :string
+#  expected_values  :string
+#  path             :string
+#  predicate1_id    :integer
+#  predicate2_id    :integer
 #
 # Indexes
 #
@@ -22,23 +26,19 @@ class WebHookPredicate < ApplicationRecord
 
   belongs_to :web_hook_rule
 
-  validates_presence_of :web_hook_rule, :web_hook_key, :expected_value
+  serialize :expected_values, Array
 
-  # Return true if the key in the params provided has the expected value
-  # The web_gook_key is formatted as a period separated string denoting the hash nesting of the params
+  validates_presence_of :web_hook_rule
+
+  # Return true if this predicate evaluates to true
+  # Implementation of this method depends on the subclass
   #
   # === Parameters
   #
+  # * +request+ - The HTTP Request object for the webhook
   # * +params+ - A hash of params in which to search
-  def is_true?(params)
-    key_paths = web_hook_key.split('.')
-    found_value = params
-    key_paths.each do |key_path|
-      found_value = found_value[key_path.to_sym]
-      break unless found_value
-    end
-
-    return found_value == expected_value
+  def is_true?(request, params)
+    raise NotImplementedError
   end
 
 end
