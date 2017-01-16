@@ -42,7 +42,8 @@ class MorokufyHipChatNotifications
 
   #TODO: add comments
   def setup_player_stats_notification(gs_player)
-    room_notification = build_room_notification("Here are all your points")
+    title = 'Here are all your points'
+    room_notification = build_room_notification()
     room_notification.card = build_player_stats_card(title, "Wow look at all those points", gs_player)
 
     return room_notification
