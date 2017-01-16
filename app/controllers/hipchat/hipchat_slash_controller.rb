@@ -1,3 +1,4 @@
+require 'morokufy_hip_chat_notifications'
 module Hipchat
   class HipchatSlashController < ApplicationController
 
@@ -7,26 +8,19 @@ module Hipchat
 
       command = params[:item][:message][:message].gsub('/stats ', '')
 
-      point_type = 'Points'
-      if command.present?
-        point_type = command
-      end
-
-      response = {
-          notify: false,
-          message_format: 'text',
-          from: 'Morokufy'
-      }
-      message = ""
+      response = ""
       if player.present?
         gs_player = get_game_server_player(player)
-        message = gs_player.player_point_types.find{ |f| f.point_name == point_type}.count.to_s
+        response = setup_player_stats_notification(gs_player)
       else
-        message = 'Player could not be found'
+        response = {
+            notify: false,
+            message_format: 'text',
+            from: 'Morokufy',
+            message: 'Player could not be found'
+        }
       end
 
-      response[:message] = message
-      puts response
       render json: response
 
     end
