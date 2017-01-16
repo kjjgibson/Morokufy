@@ -8,11 +8,11 @@ module Hipchat
 
       command = params[:item][:message][:message].gsub('/stats ', '')
 
-      response = ""
+      response = ''
       if morokufy_player.present?
         gs_player = get_gs_player(morokufy_player)
-        response = setup_player_stats_notification(gs_player)
-
+        notifications = MorokufyHipChatNotifications.new()
+        response = notifications.setup_player_stats_notification(gs_player)
       else
         response = {
             notify: false,
