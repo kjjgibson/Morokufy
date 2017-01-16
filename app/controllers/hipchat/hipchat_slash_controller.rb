@@ -4,12 +4,12 @@ module Hipchat
 
     def create
       player_alias = params[:item][:message][:from][:name]
-      player = Player.joins(:aliases).where('aliases.alias_value': player_alias).first
+      morokufy_player = Player.joins(:aliases).where('aliases.alias_value': player_alias).first
 
       command = params[:item][:message][:message].gsub('/stats ', '')
 
       response = ""
-      if player.present?
+      if morokufy_player.present?
         gs_response = GameServer::Client::Request::PlayerRequest.new(morokufy_player.api_key, morokufy_player.shared_secret).get_player(morokufy_player.identifier)
         if gs_response.is_success?
           gs_player = gs_response.player
