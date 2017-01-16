@@ -29,6 +29,7 @@ describe Hipchat::HipchatSlashController, type: :controller do
 
     context 'should run' do
       it 'should return 200 not found' do
+        #TODO: Fix this mocking shit
         post :create, params: request_body
         expect(response.response_code).to eq(200)
       end

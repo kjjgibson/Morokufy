@@ -1,9 +1,10 @@
+require 'morokufy_hip_chat_notifications'
 module Hipchat
   class HipchatSlashController < ApplicationController
 
     def create
       player_alias = params[:item][:message][:from][:name]
-      morokufy_player = get_player(player_alias);
+      morokufy_player = get_player(player_alias)
 
       command = params[:item][:message][:message].gsub('/stats ', '')
 
@@ -29,7 +30,7 @@ module Hipchat
       return Player.joins(:aliases).where('aliases.alias_value': player_alias).first
     end
 
-    def get_gs_player(player)
+    def get_gs_player(morokufy_player)
       gs_response = GameServer::Client::Request::PlayerRequest.new(morokufy_player.api_key, morokufy_player.shared_secret).get_player(morokufy_player.identifier)
       if gs_response.is_success?
         gs_player = gs_response.player
