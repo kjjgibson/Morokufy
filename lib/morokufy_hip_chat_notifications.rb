@@ -44,7 +44,7 @@ class MorokufyHipChatNotifications
   def setup_player_stats_notification(gs_player)
     title = 'Here are all your points'
     room_notification = build_room_notification(title)
-    room_notification.card = build_player_stats_card(title, "Wow look at all those points", gs_player)
+    room_notification.card = build_player_stats_card("Wow look at all those points", gs_player)
 
     return room_notification
   end
@@ -74,13 +74,12 @@ class MorokufyHipChatNotifications
   end
 
   #TODO: add comments
-  private def build_player_stats_card(activity_html, description, gs_player)
+  private def build_player_stats_card(description, gs_player)
     card = HipChat::Card.new(id: SecureRandom.uuid, style: HipChat::Card::Style::APPLICATION)
     card.format = HipChat::Card::Format::MEDIUM
-    card.title = 'Morokufy'
+    card.title = 'Player Stats'
     card.description = HipChat::CardDescription.new(value: description, format: HipChat::CardDescription::ValueFormat::HTML)
     card.icon = HipChat::Icon.new(url: 'http://moroku.com/wp-content/uploads/2015/12/weblogo150-50-copy.png')
-    card.activity = HipChat::CardActivity.new(html: activity_html)
     card.attributes = attributes_for_point_types(gs_player)
     return card
   end
