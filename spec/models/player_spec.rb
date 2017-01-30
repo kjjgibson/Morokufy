@@ -30,6 +30,7 @@ describe Player, type: :model do
 
   describe 'associations' do
     it { should have_many(:aliases) }
+    it { should have_many(:rule_consequent_events) }
   end
 
   describe '#log_event' do
