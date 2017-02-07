@@ -1,16 +1,17 @@
 require 'morokufy_hip_chat_notifications'
+require 'morokufy_player_helper'
 module Hipchat
   class HipchatSlashController < ApplicationController
 
     def create
-      player_alias = params[:item][:message][:from][:name]
-      morokufy_player = get_player(player_alias)
+      player_helper = MorokufyPlayerHelper.new()
 
-      command = params[:item][:message][:message].gsub('/stats ', '')
+      player_alias = params[:item][:message][:from][:name]
+      morokufy_player = player_helper.get_player(player_alias)
 
       response = ''
       if morokufy_player.present?
-        gs_player = get_gs_player(morokufy_player)
+        gs_player = player_helper.get_gs_player(morokufy_player)
         notifications = MorokufyHipChatNotifications.new()
         response = notifications.setup_player_stats_notification(gs_player)
       else
@@ -23,21 +24,6 @@ module Hipchat
       end
 
       render json: response
-
-    end
-
-    def get_player (player_alias)
-      return Player.joins(:aliases).where('aliases.alias_value': player_alias).first
-    end
-
-    def get_gs_player(morokufy_player)
-      gs_response = GameServer::Client::Request::PlayerRequest.new(morokufy_player.api_key, morokufy_player.shared_secret).get_player(morokufy_player.identifier)
-      if gs_response.is_success?
-        gs_player = gs_response.player
-      else
-        Rails.logger.error("Could not get the Player on the GameServer: #{response.error_message}")
-      end
-      return gs_player
     end
 
   end
