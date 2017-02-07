@@ -41,7 +41,7 @@ describe WebHookPredicate, type: :model do
     it 'should raise an error' do
       expect do
         web_hook_predicate.is_true?(nil, nil)
-      end.to raise_error
+      end.to raise_error(NotImplementedError)
     end
   end
 
