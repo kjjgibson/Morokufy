@@ -83,6 +83,30 @@ Rule.transaction do
   create_points_rule('Bitbucket PR Approved', 'BitbucketPullRequestApproved', [{ name: 'Points', count: 1 }, { name: 'Exp', count: 10 }])
   create_points_rule('Bitbucket PR Merged', 'BitbucketPullRequestMerged', [{ name: 'Points', count: 50 }, { name: 'Exp', count: 500 }])
   create_points_rule('Bitbucket Comment Created', 'BitbucketPullRequestCommentCreated', [{ name: 'Points', count: 2 }, { name: 'Exp', count: 20 }])
+
+  create_achievement_rule('One Bitbucket Repository Push', 'BitbucketRepositoryPush', 1, 'First Push')
+  create_achievement_rule('Five Bitbucket Repository Pushes', 'BitbucketRepositoryPush', 5, 'Pushing Uphill')
+  create_achievement_rule('Ten Bitbucket Repository Pushes', 'BitbucketRepositoryPush', 10, 'Push the Button')
+  create_achievement_rule('Twenty Bitbucket Repository Pushes', 'BitbucketRepositoryPush', 20, 'Blind Pusher')
+  create_achievement_rule('Forty Bitbucket Repository Pushes', 'BitbucketRepositoryPush', 40, 'Push Apprentice')
+  create_achievement_rule('Eighty Bitbucket Repository Pushes', 'BitbucketRepositoryPush', 80, 'Push Expert')
+  create_achievement_rule('Two Hundred Bitbucket Repository Pushes', 'BitbucketRepositoryPush', 200, 'Push Master')
+
+  create_achievement_rule('One Bitbucket PR Created', 'BitbucketPullRequestCreated', 1, 'Please Be Gentle')
+  create_achievement_rule('Five Bitbucket PRs Created', 'BitbucketPullRequestCreated', 5, 'Review Me!')
+  create_achievement_rule('Ten Bitbucket PRs Created', 'BitbucketPullRequestCreated', 10, 'Criticism Welcome')
+  create_achievement_rule('Twenty Bitbucket PRs Created', 'BitbucketPullRequestCreated', 20, 'Review Guru')
+  create_achievement_rule('Forty Bitbucket PRs Created', 'BitbucketPullRequestCreated', 40, 'Review My Sexy Code')
+  create_achievement_rule('Eighty Bitbucket PRs Created', 'BitbucketPullRequestCreated', 80, 'Nothing to Say?')
+  create_achievement_rule('Two Hundred Bitbucket PRs Created', 'BitbucketPullRequestCreated', 200, 'Look at this Perfect Code')
+
+  create_achievement_rule('One Bitbucket PR Merged', 'BitbucketPullRequestMerged', 1, 'First Merge')
+  create_achievement_rule('Five Bitbucket PRs Merged', 'BitbucketPullRequestMerged', 5, 'Make Way for My Merge')
+  create_achievement_rule('Ten Bitbucket PRs Merged', 'BitbucketPullRequestMerged', 10, 'Fork in the Road')
+  create_achievement_rule('Twenty Bitbucket PRs Merged', 'BitbucketPullRequestMerged', 20, 'Branch Shredder')
+  create_achievement_rule('Forty Bitbucket PRs Merged', 'BitbucketPullRequestMerged', 40, 'No Conflicts Here')
+  create_achievement_rule('Eighty Bitbucket PRs Merged', 'BitbucketPullRequestMerged', 80, 'Merge Master')
+  create_achievement_rule('Two Hundred Bitbucket PRs Merged', 'BitbucketPullRequestMerged', 200, 'Merge Guru')
   #=======================================
 
   #============== Jira ==============
@@ -90,10 +114,26 @@ Rule.transaction do
   create_points_rule('Jira Issue Updated', 'JiraIssueUpdated', [{ name: 'Points', count: 1 }, { name: 'Exp', count: 10 }])
   create_points_rule('Jira Worklog Created', 'JiraWorklogCreated', [{ name: 'Points', count: 10 }, { name: 'Exp', count: 100 }])
   create_points_rule('Jira Comment Created', 'JiraCommentCreated', [{ name: 'Points', count: 1 }, { name: 'Exp', count: 10 }])
+
+  create_achievement_rule('Log Jira Work Once', 'JiraWorklogCreated', 1, 'Off to Work You Go')
+  create_achievement_rule('Log Jira Work Five Times', 'JiraWorklogCreated', 5, 'Workin\' 9 Till 5')
+  create_achievement_rule('Log Jira Work Ten Times', 'JiraWorklogCreated', 10, 'On Time')
+  create_achievement_rule('Log Jira Work Twenty Times', 'JiraWorklogCreated', 20, 'Works Wonders')
+  create_achievement_rule('Log Jira Work Forty Times', 'JiraWorklogCreated', 40, 'Working Bee')
+  create_achievement_rule('Log Jira Work Eighty Times', 'JiraWorklogCreated', 80, 'Busy Beaver')
+  create_achievement_rule('Log Jira Work Two Hundred Times', 'JiraWorklogCreated', 200, 'Lumberjack')
   #=======================================
 
   #============== Heroku Deploy Hooks ====
   create_points_rule('Heroku Deploy', 'HerokuDeploy', [{ name: 'Points', count: 25 }, { name: 'Exp', count: 250 }])
+
+  create_achievement_rule('One Heroku Deploy', 'HerokuDeploy', 1, 'First Deployment')
+  create_achievement_rule('Five Heroku Deploys', 'HerokuDeploy', 5, 'Officer Cadet')
+  create_achievement_rule('Ten Heroku Deploys', 'HerokuDeploy', 10, 'Second Lieutenant')
+  create_achievement_rule('Twenty Heroku Deploys', 'HerokuDeploy', 20, 'First Lieutenant')
+  create_achievement_rule('Forty Heroku Deploys', 'HerokuDeploy', 40, 'Captain')
+  create_achievement_rule('Eighty Heroku Deploys', 'HerokuDeploy', 80, 'Colonel')
+  create_achievement_rule('Two Hundred Heroku Deploys', 'HerokuDeploy', 200, 'Major General')
   #=======================================
 
 end

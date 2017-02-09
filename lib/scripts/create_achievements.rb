@@ -7,7 +7,7 @@ end
 
 def create_numbered_achievements(achievement_details, description, image_name_prefix)
   achievement_details.each do |achievement_detail|
-    description = description.gsub('%{number}', achievement_detail[:number])
+    description = description.gsub('%{number}', "#{achievement_detail[:number]}")
     if achievement_detail[:number] > 1
       description = "#{description}s"
     end
@@ -20,13 +20,13 @@ Achievement.transaction do
   #============= Semaphore ================
   image_name_prefix = 'semaphore_passed'
   description = 'Successfully build %{number} Semaphore project'
-  achievement_details = [{ number: 1, name: 'Does it Work?' }, #brown
-                         { number: 5, name: 'Testing the Waters' }, #grey
-                         { number: 10, name: 'Testing Your Skill' }, #amber
-                         { number: 20, name: 'A Tester\'s Courage' }, #green
-                         { number: 40, name: 'Quality Assured' }, #cyan
-                         { number: 80, name: 'Can\'t Test This!' }, #Ingigo
-                         { number: 200, name: 'Green for Miles' }] #purple
+  achievement_details = [{ number: 1, name: 'Does it Work?' },
+                         { number: 5, name: 'Testing the Waters' },
+                         { number: 10, name: 'Testing Your Skill' },
+                         { number: 20, name: 'A Tester\'s Courage' },
+                         { number: 40, name: 'Quality Assured' },
+                         { number: 80, name: 'Can\'t Test This!' },
+                         { number: 200, name: 'Green for Miles' }]
   create_numbered_achievements(achievement_details, description, image_name_prefix)
 
   image_name_prefix = 'semaphore_failed'
@@ -39,48 +39,48 @@ Achievement.transaction do
   #============= BitBucket ================
   image_name_prefix = 'bitbucket_repo_push'
   description = 'Push to a BitBucket repo %{number} time'
-  achievement_details = [{ number: 1, name: '' },
-                         { number: 5, name: '' },
-                         { number: 10, name: '' },
-                         { number: 20, name: '' },
-                         { number: 40, name: '' },
-                         { number: 80, name: '' },
-                         { number: 200, name: '' }]
+  achievement_details = [{ number: 1, name: 'First Push' },
+                         { number: 5, name: 'Pushing Uphill' },
+                         { number: 10, name: 'Push the Button' },
+                         { number: 20, name: 'Blind Pusher' },
+                         { number: 40, name: 'Push Apprentice' },
+                         { number: 80, name: 'Push Expert' },
+                         { number: 200, name: 'Push Master' }]
   create_numbered_achievements(achievement_details, description, image_name_prefix)
 
   image_name_prefix = 'bitbucket_pr_created'
   description = 'Create %{number} PullRequest'
-  achievement_details = [{ number: 1, name: '' },
-                         { number: 5, name: '' },
-                         { number: 10, name: '' },
-                         { number: 20, name: '' },
-                         { number: 40, name: '' },
-                         { number: 80, name: '' },
-                         { number: 200, name: '' }]
+  achievement_details = [{ number: 1, name: 'Please Be Gentle' },
+                         { number: 5, name: 'Review Me!' },
+                         { number: 10, name: 'Criticism Welcome' },
+                         { number: 20, name: 'Review Guru' },
+                         { number: 40, name: 'Review My Sexy Code' },
+                         { number: 80, name: 'Nothing to Say?' },
+                         { number: 200, name: 'Look at this Perfect Code' }]
   create_numbered_achievements(achievement_details, description, image_name_prefix)
 
   image_name_prefix = 'bitbucket_pr_merged'
   description = 'Merge %{number} PullRequest'
-  achievement_details = [{ number: 1, name: '' },
-                         { number: 5, name: '' },
-                         { number: 10, name: '' },
-                         { number: 20, name: '' },
-                         { number: 40, name: '' },
-                         { number: 80, name: '' },
-                         { number: 200, name: '' }]
+  achievement_details = [{ number: 1, name: 'First Merge' },
+                         { number: 5, name: 'Make Way for My Merge' },
+                         { number: 10, name: 'Fork in the Road' },
+                         { number: 20, name: 'Branch Shredder' },
+                         { number: 40, name: 'No Conflicts Here' },
+                         { number: 80, name: 'Merge Master' },
+                         { number: 200, name: 'Merge Guru' }]
   create_numbered_achievements(achievement_details, description, image_name_prefix)
   #========================================
 
   #============= Jira ================
   image_name_prefix = 'jira_log_work'
   description = 'Log work in Jira %{number} time'
-  achievement_details = [{ number: 1, name: '' },
-                         { number: 5, name: '' },
-                         { number: 10, name: '' },
-                         { number: 20, name: '' },
-                         { number: 40, name: '' },
-                         { number: 80, name: '' },
-                         { number: 200, name: '' }]
+  achievement_details = [{ number: 1, name: 'Off to Work You Go' },
+                         { number: 5, name: 'Workin\' 9 Till 5' },
+                         { number: 10, name: 'On Time' },
+                         { number: 20, name: 'Works Wonders' },
+                         { number: 40, name: 'Working Bee' },
+                         { number: 80, name: 'Busy Beaver' },
+                         { number: 200, name: 'Lumberjack' }]
   create_numbered_achievements(achievement_details, description, image_name_prefix)
   #========================================
 
