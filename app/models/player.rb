@@ -28,6 +28,7 @@ class Player < ApplicationRecord
   validates_presence_of :identifier
 
   has_many :aliases
+  has_many :rule_consequent_events
 
   # Log an ExternalEvent on the Game Server (which will run the Rules Engine)
   # If running the Rules Engine resulted in any Points or Achievements being awarded then they will be contained in the response.
@@ -60,6 +61,7 @@ class Player < ApplicationRecord
   private def create_rule_consequent_events(external_event_response, event_name)
     (external_event_response.points_awarded || []).each do |points_award|
       RuleConsequentEvent.create(
+          player: self,
           consequent_type: RuleConsequentEvent::ConsequentType::POINTS_CONSEQUENT,
           event_name: event_name,
           point_type: points_award.point_type,
@@ -68,6 +70,7 @@ class Player < ApplicationRecord
 
     (external_event_response.achievements_awarded || []).each do |achievement_awarded|
       RuleConsequentEvent.create(
+          player: self,
           consequent_type: RuleConsequentEvent::ConsequentType::ACHIEVEMENT_CONSEQUENT,
           event_name: event_name,
           achievement_id: achievement_awarded.achievement_id)
