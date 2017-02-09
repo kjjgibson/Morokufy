@@ -67,4 +67,65 @@ describe 'AchievementRequest' do
     end
   end
 
+  describe '#get_achievements' do
+    before do
+      allow(GameServer::AuthenticationHelper).to receive(:admin_gs_headers).with('', URI.parse('/morokufy/admin/achievements'), 'GET').and_return(mock_headers)
+    end
+
+    context 'successful request' do
+
+      let(:response_double) { double('response') }
+      let(:response_body) { [{ name: 'name', description: 'description', image_url: 'image_url' }].to_json }
+
+      before do
+        allow(response_double).to receive(:body).and_return(response_body)
+        allow(response_double).to receive(:success?).and_return(true)
+
+        allow(HTTParty).to receive(:get).and_return(response_double)
+      end
+
+      it 'should call the get method on HTTParty' do
+        expect(HTTParty).to receive(:get).with(URI.parse('http://gameserver-morokufy.herokuapp.com/morokufy/admin/achievements'), headers: mock_headers.stringify_keys)
+
+        GameServer::Admin::Request::AchievementRequest.new().get_achievements
+      end
+
+      it 'should return the response object' do
+        get_achievements_response = GameServer::Admin::Request::AchievementRequest.new().get_achievements
+
+        expect(get_achievements_response.success).to eq(true)
+        expect(get_achievements_response.error_message).to eq(nil)
+
+        achievements = get_achievements_response.achievements
+        expect(achievements).not_to eq(nil)
+        expect(achievements.count).to eq(1)
+
+        achievement = achievements[0]
+        expect(achievement.name).to eq('name')
+        expect(achievement.description).to eq('description')
+        expect(achievement.image_url).to eq('image_url')
+      end
+    end
+
+    context 'failed request' do
+      let(:response_double) { double('response') }
+      let(:response_body) { { error_message: 'error' }.to_json }
+
+      before do
+        allow(response_double).to receive(:body).and_return(response_body)
+        allow(response_double).to receive(:success?).and_return(false)
+
+        allow(HTTParty).to receive(:get).and_return(response_double)
+      end
+
+      it 'should return the response object' do
+        get_achievements_response = GameServer::Admin::Request::AchievementRequest.new().get_achievements
+
+        expect(get_achievements_response.success).to eq(false)
+        expect(get_achievements_response.error_message).to eq('error')
+        expect(get_achievements_response.achievements).to eq([])
+      end
+    end
+  end
+
 end
