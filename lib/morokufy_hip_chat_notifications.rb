@@ -40,6 +40,15 @@ class MorokufyHipChatNotifications
     send_hip_chat_notification(room_notification)
   end
 
+  #TODO: add comments
+  def setup_player_stats_notification(gs_player)
+    title = 'Here are all your points'
+    room_notification = build_room_notification(title)
+    room_notification.card = build_player_stats_card("Wow look at all those points", gs_player)
+
+    return room_notification
+  end
+
   # Send a HipChat Notification to the room specified in the HipChat config variable
   #
   # === Parameters
@@ -62,6 +71,17 @@ class MorokufyHipChatNotifications
     room_notification.color = HipChat::RoomNotification::Color::GRAY
     room_notification.notify = false
     return room_notification
+  end
+
+  #TODO: add comments
+  private def build_player_stats_card(description, gs_player)
+    card = HipChat::Card.new(id: SecureRandom.uuid, style: HipChat::Card::Style::APPLICATION)
+    card.format = HipChat::Card::Format::MEDIUM
+    card.title = 'Player Stats'
+    card.description = HipChat::CardDescription.new(value: description, format: HipChat::CardDescription::ValueFormat::HTML)
+    card.icon = HipChat::Icon.new(url: 'http://moroku.com/wp-content/uploads/2015/12/weblogo150-50-copy.png')
+    card.attributes = attributes_for_point_types(gs_player)
+    return card
   end
 
   # Build a card object for a Room Notification
