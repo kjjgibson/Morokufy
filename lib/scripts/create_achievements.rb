@@ -7,12 +7,12 @@ end
 
 def create_numbered_achievements(achievement_details, description, image_name_prefix)
   achievement_details.each do |achievement_detail|
-    description = description.gsub('%{number}', "#{achievement_detail[:number]}")
+    d = description.gsub("%{number}", "#{achievement_detail[:number]}")
     if achievement_detail[:number] > 1
-      description = "#{description}s"
+      d = "#{d}s"
     end
 
-    build_achievement(achievement_detail[:name], description, "https://s3-ap-southeast-2.amazonaws.com/gameserver-morokufy/achievement_#{image_name_prefix}_#{achievement_detail[:number]}.png")
+    build_achievement(achievement_detail[:name], d, "https://s3-ap-southeast-2.amazonaws.com/gameserver-morokufy/achievement_#{image_name_prefix}_#{achievement_detail[:number]}.png")
   end
 end
 
